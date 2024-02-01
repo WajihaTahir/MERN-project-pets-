@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+.homebody{
+    background-image: url("../src/assets/cathomepage.jpg");
+    background-size: cover;
+    padding: none;
+    height:100vh;
+    width:100vw;
+    color: white;
+    font-family:  "Roboto", sans-serif;
+}
+
+.homeheading{
+    font-size: 40px;
+    
+}

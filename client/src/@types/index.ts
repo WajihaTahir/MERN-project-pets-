@@ -1,0 +1,3 @@
+type ResNotOk = {
+    error:string
+}

@@ -1,0 +1,72 @@
+.navbar{
+    padding:0;
+    margin:0;
+    background-color: black;
+}
+  
+  a {
+    text-decoration: none;
+    color: white;
+  }
+  
+  .menu {
+    position: absolute;
+    height: 100%;
+    width: 70px;
+    background: rgba(217, 92, 192, 0.494);
+    transition: width 1s;
+    overflow: hidden;
+    font-family: "Roboto", sans-serif;
+    z-index: 99;
+    box-shadow: inset -8px 0px 16px -6px rgba(0, 0, 0, 0.2);
+  }
+  .menu:hover {
+    width: 220px;
+  }
+  
+  
+  .menuitem {
+    height: 20%;
+    line-height: 30px;
+    position: relative;
+    padding: 10px;
+    transition: border 0.9s;
+  }
+  
+  .menuitem:hover {
+    background: (0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+  .one {
+    border-left: 0px solid #16a085;
+  }
+  
+  .one:hover {
+    border-left: 50px solid rgb(4, 221, 221);
+  }
+  
+  .two {
+    border-left: 0px solid #e7dada;
+  }
+  
+  .two:hover {
+    border-left: 50px solid rgb(216, 31, 124);
+  }
+  
+  .three {
+    border-left: 0px solid #4a4d9a;
+  }
+  
+  .three:hover {
+    border-left: 50px solid rgb(226, 181, 17);
+  }
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
