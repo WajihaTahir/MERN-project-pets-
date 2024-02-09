@@ -1,20 +1,27 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
-  const { user, updateUser } = useContext(AuthContext);
+  const { user, updateUser, logout } = useContext(AuthContext);
   const [email, setEmail] = useState(user ? user.email : "");
   const [username, setUsername] = useState(user ? user.username : "");
+  const navigate = useNavigate();
+
+  const logoutUser = () => {
+    logout();
+    navigate("/");
+  };
 
   const handleSubmit = async () => {
-    updateUser({email, username})
+    updateUser({ email, username });
   };
-  if(!user)
-  return(
-<div>
-  <p>Please login first</p>
-</div>
-)
+  if (!user)
+    return (
+      <div>
+        <p>Please login first</p>
+      </div>
+    );
 
   if (user)
     return (
@@ -33,6 +40,11 @@ const Profile = () => {
           onChange={(e) => setUsername(e.target.value)}
         />
         <button onClick={handleSubmit}>Update the data</button>
+        {user && (
+          <p className="logout" onClick={logoutUser}>
+            Logout
+          </p>
+        )}
       </div>
     );
 };

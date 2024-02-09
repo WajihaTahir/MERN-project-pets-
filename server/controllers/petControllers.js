@@ -2,7 +2,7 @@ import PetModel from "../models/petModel.js"
 
 const getAllPets = async (req, res) =>{
 try {
-    const allPets = await PetModel.find();
+    const allPets = await PetModel.find().populate({path:"owner", select:"username",});
     res.status(200).json({
         number:allPets.length,
         allPets

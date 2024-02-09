@@ -1,5 +1,7 @@
 import { isValidObjectId } from "mongoose";
 import UserModel from "../models/userModel.js";
+import cloudinaryConfig from "../config/cloudinary.js";
+import { v2 as cloudinary } from "cloudinary";
 
 const test = (req, res) => {
   res.send("testing successful");
@@ -7,7 +9,9 @@ const test = (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await UserModel.find({}).select("-password"); //find everything
+    const allUsers = await UserModel.find({})
+      .select("-password")
+      .populate({ path: "ownedPet", select: ["name", "type"] }); //find everything
     res.status(200).json(allUsers);
   } catch (e) {
     console.log("error", e);
@@ -91,4 +95,41 @@ const updateUser = async (req, res) => {
   }
 };
 
-export { test, getAllUsers, findUserByEmail, signup, login, updateUser };
+const uploadPicture = async (req, res) => {
+  console.log("req", req.file);
+  if (!req.file) {
+    res.status(500).json({ message: "file not supported" });
+  }
+  if (req.file) {
+    //Upload a picture
+    try {
+      const pictureUpload = await cloudinary.uploader.upload(req.file.path, {
+        folder: "userProfiles",
+      });
+      console.log("picture upload", pictureUpload);
+
+      res.status(201).json({
+        message: "file uploaded successfully",
+        error: false,
+        data: { imageUrl: pictureUpload.secure_url },
+      });
+    } catch (error) {
+      console.log("error on pictureUpload", error);
+      res.status(500).json({
+        message: "file not uploaded",
+        error: true,
+        data: null,
+      });
+    }
+  }
+};
+
+export {
+  test,
+  getAllUsers,
+  findUserByEmail,
+  signup,
+  login,
+  updateUser,
+  uploadPicture,
+};

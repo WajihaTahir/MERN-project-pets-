@@ -5,9 +5,12 @@ import Layout from "./components/Layout.tsx";
 import Error404 from "./pages/Error404.tsx";
 import Homepage from "./pages/Homepage.tsx";
 import Users from "./pages/Users.tsx";
-import AuthPage from "./pages/AuthPage.tsx";
 import { AuthContextProvider } from "./context/AuthContext.tsx";
 import Profile from "./pages/Profile.tsx";
+import Signup from "./pages/Signup.tsx";
+import Login from "./pages/Login.tsx";
+import Allposts from "./pages/Allposts.tsx";
+import Footer from "./components/Footer.tsx";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +18,9 @@ const router = createBrowserRouter([
       <AuthContextProvider>
         <Layout>
           <Outlet />
+          <Footer />
         </Layout>
+       
       </AuthContextProvider>
     ),
     children: [
@@ -23,17 +28,27 @@ const router = createBrowserRouter([
         path: "/",
         element: <Homepage />,
       },
+      // {
+      //   path: "/users",
+      //   element: <Users />,
+      // },
       {
-        path: "/users",
-        element: <Users />,
-      },
-      {
-        path: "/auth",
-        element: <AuthPage />,
+        path: "/login",
+        element: <Login />,
       },
       {
         path: "/profile",
         element: <Profile />,
+      },
+
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+
+      {
+        path: "/posts",
+        element: <Allposts />,
       },
     ],
   },
@@ -45,6 +60,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

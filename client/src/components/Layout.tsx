@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar"
+import Footer from "./Footer";
 
 type Props = {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ function Layout({ children }: Props) {
     <>
       <Navbar />
       <div style={{ textAlign: "center" }}>{children}</div>
+      
     </>
   );
 }

@@ -8,25 +8,50 @@ function Navbar() {
   return (
     <nav>
       <div className="navbar">
-      <div className="menu">
-        <div className="menuitem one">
-          <NavLink to={"/"}><p>Home</p></NavLink>{" "}
-        </div>
-        <div className="menuitem two">
-          <NavLink to={"/users"}><p>Users</p></NavLink>
-        </div>
-        <div className="menuitem three">
+        <div className="menu">
+          <div className="menuitem one">
+            <NavLink to={"/"}>
+              <p>Home</p>
+            </NavLink>{" "}
+          </div>
+          {/* <div className="menuitem two">
+            <NavLink to={"/users"}>
+              <p>Users</p>
+            </NavLink>
+          </div> */}
+
           {!user ? (
-            <NavLink to={"/auth"}><p>Login</p></NavLink>
+            <div className="menuitem three">
+              <NavLink to={"/login"}>
+                <p>Login</p>
+              </NavLink>
+            </div>
           ) : (
             <>
-              <NavLink to={"/profile"}>Profile</NavLink>
-              <button onClick={logout}>Logout</button>
+              <div className="menuitem threehalf">
+                <NavLink onClick={logout} to={"/"}>
+                  Logout
+                </NavLink>
+              </div>
             </>
           )}
-          {user && <p>{user.email}</p>}
+
+          {!user && (
+            <div className="menuitem four">
+              <NavLink to={"/signup"}>
+                <p>Signup</p>
+              </NavLink>
+            </div>
+          )}
+
+          {user && (
+            <div className="menuitem four">
+              <NavLink to={"/posts"}>
+                <p>All Pet Posts</p>
+              </NavLink>
+            </div>
+          )}
         </div>
-      </div>
       </div>
     </nav>
   );

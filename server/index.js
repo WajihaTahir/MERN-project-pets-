@@ -4,6 +4,8 @@ import "dotenv/config";
 import userRouter from "./routes/userRoutes.js";
 import mongoose from "mongoose";
 import petRouter from "./routes/petRoutes.js";
+import postRouter from "./routes/postRoutes.js";
+import cloudinaryConfig from "./config/cloudinary.js";
 
 const app = express();
 
@@ -16,11 +18,14 @@ const addMiddlewares = () => {
     })
   );
   app.use(cors()); //cross origin resource sharing, allowing to handle requests from different origin.
+  cloudinaryConfig();
+
 };
 
 const addRoutes = () => {
   app.use("/api/users", userRouter);  //to mount the userRouter middleware to the specified path.
   app.use("/api/pets", petRouter);
+  app.use("/api/posts", postRouter)
   //"/api/users -> the base path for the routes handled by the userRouter coming from that file.
   app.use(
     "*",

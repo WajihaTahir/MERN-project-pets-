@@ -1,6 +1,8 @@
-export interface User {
+export declare interface User {
   _id: string;
   email: string;
-  username?: string;
+  username: string;
+  userpicture?:string;
   createdAt:string
 }
+
