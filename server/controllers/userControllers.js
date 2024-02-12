@@ -2,10 +2,14 @@ import { isValidObjectId } from "mongoose";
 import UserModel from "../models/userModel.js";
 import cloudinaryConfig from "../config/cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
+import encryptPassword from "../utils/encryptPassword.js";
+import validator from "validator";
 
 const test = (req, res) => {
   res.send("testing successful");
 };
+
+//get all users
 
 const getAllUsers = async (req, res) => {
   try {
@@ -18,6 +22,8 @@ const getAllUsers = async (req, res) => {
     res.status(500).json({ error: "server error" });
   }
 };
+
+//find one user by email
 
 const findUserByEmail = async (req, res) => {
   console.log(req.params);
@@ -35,17 +41,69 @@ const findUserByEmail = async (req, res) => {
   }
 };
 
+//signup a new user
+
 const signup = async (req, res) => {
   console.log(req.body);
-  const { email, password, username } = req.body;
-  if (!email | !password)
-    return res.status(400).json({ error: "All fields must be included" });
 
+  const { email, password, username, userpicture } = req.body;
+  if (!email || !password || !username)
+    return res.status(400).json({ error: "All fields must be included" });
+  if (!validator.isEmail(email)) {
+    return res.status(400).json({ error: "Email is not valid" });
+  }
+  if (!validator.isStrongPassword(password)) {
+    return res.status(400).json({ error: "Password is not strong enough" });
+  }
+  if (validator.isEmpty(username)) {
+    return res.status(400).json({ error: "Username can't be empty" });
+  }
   try {
-    const newUser = await UserModel.create({ email, password, username });
-    console.log(newUser);
-    if (newUser) res.status(201).json(newUser);
-    else res.status(400).json({ error: "user couldn't be created" });
+    //if all credentials provided, checking if there is an existing user.
+    const existingUser = await UserModel.findOne({ email: email });
+    //user with same email exists
+    if (existingUser) {
+      res.status(400).json({ error: "Email already registered" });
+    }
+    //new user, no user with same email exists
+    if (!existingUser) {
+      try {
+        const hashedPassword = await encryptPassword(password); //encrypt password
+        if (!hashedPassword) {
+          //if password can't be encrypted
+          res.status(500).json({ error: "problem encoding password." });
+        }
+        if (hashedPassword) {
+          //if password is encrypted
+          const newUser = await UserModel.create({
+            email: email,
+            password: hashedPassword,
+            username: username,
+            userpicture: userpicture,
+          });
+          console.log("new user", newUser);
+          if (newUser)
+            res.status(201).json({
+              message: "user registered",
+              error: false,
+              data: {
+                user: {
+                  username: newUser.username,
+                  email: newUser.email,
+                  userpicture: newUser.userpicture,
+                },
+              },
+            });
+        } else {
+          res.status(400).json({ error: "user couldn't be created" });
+        }
+      } catch (error) {
+        console.log(
+          "something bad happened, user couldnot be created with hashed password",
+          error
+        );
+      }
+    }
   } catch (error) {
     if (error.code === 11000)
       res.status(400).json({ error: "Email already registered" });
@@ -53,6 +111,8 @@ const signup = async (req, res) => {
     res.status(500).json({ error: "something went wrong..." });
   }
 };
+
+//login a user
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -77,6 +137,8 @@ const login = async (req, res) => {
   }
 };
 
+//update an existing user
+
 const updateUser = async (req, res) => {
   const { id } = req.params;
   const valid = isValidObjectId(id);
@@ -95,9 +157,12 @@ const updateUser = async (req, res) => {
   }
 };
 
+//upload the picture for the user profile
+
 const uploadPicture = async (req, res) => {
   console.log("req", req.file);
   if (!req.file) {
+    console.log("file format not supported.");
     res.status(500).json({ message: "file not supported" });
   }
   if (req.file) {

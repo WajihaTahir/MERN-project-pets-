@@ -1,6 +1,7 @@
 import { useState, createContext, PropsWithChildren } from "react";
 import { User } from "../@types/users";
 import baseUrl from "../utils/baseurl";
+import { ResNotOk } from "../@types";
 
 interface AuthContextType {
   user: User | null;

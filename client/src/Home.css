@@ -14,11 +14,9 @@
 }
 
 .homebody{
-    background-image: url("../src/assets/dogs.jpg");
-    background-size: auto;
-    margin: 0;
-    padding: 0;
-    height:100vh;
+    background-image: url("../src/assets/allpets.jpg");
+    background-size:cover;
+    height:1000px;
     width:100vw;
     color: black;
     font-family:  "Roboto", sans-serif;
@@ -40,8 +38,8 @@
  @media only screen and (max-width:600px) and (orientation:landscape) {
 
     .homebody{
-        background-image: url("../src/assets/dogs.jpg");
-        background-size: cover;
+        background-image: url("../src/assets/allpets.jpg");
+        object-fit:cover;
         padding: none;
         height:70%;
         width:70%;

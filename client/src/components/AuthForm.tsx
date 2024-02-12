@@ -1,4 +1,4 @@
-import {  ChangeEvent, MouseEvent, useContext, useState } from "react";
+import { ChangeEvent, MouseEvent, useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { UploadFileResponse } from "../@types";
 import baseUrl from "../utils/baseurl";
@@ -7,15 +7,12 @@ type Props = {
   // It describes the expected props for the AuthForm component.
   submitTitle: string;
   submit: (email: string, password: string) => Promise<void>; //A function that takes two parameters
-
-  Tag: React.ElementType;
+  Tag?: React.ElementType;
   isInput: boolean;
-  ButtonTag: React.ElementType;
+  ButtonTag?: React.ElementType;
 
   //(email and password, both of type string) and returns void (no return value).
 };
-
- 
 
 const AuthForm = ({ submitTitle, submit, Tag, isInput, ButtonTag }: Props) => {
   //receives the submitTitle and submit props from the Props type.
@@ -24,10 +21,11 @@ const AuthForm = ({ submitTitle, submit, Tag, isInput, ButtonTag }: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("handleSubmit");
     //prevents the default form submission behavior,
     //which typically involves a page refresh.
     e.preventDefault();
-    if (!inputValues.email || !inputValues.password)
+    if (!inputValues.email || !inputValues.password )
       return alert("All fields must be included");
     await submit(inputValues.email, inputValues.password);
   };
@@ -50,7 +48,7 @@ const AuthForm = ({ submitTitle, submit, Tag, isInput, ButtonTag }: Props) => {
     const requestOptions = {
       method: "POST",
       body: formdata,
-      redirect: "follow",
+      // redirect: "follow",
     };
     try {
       const response = await fetch(
@@ -94,15 +92,11 @@ const AuthForm = ({ submitTitle, submit, Tag, isInput, ButtonTag }: Props) => {
           style={{ borderRadius: "10px", padding: "10px", width: "300px" }}
           onChange={handleChange}
         />
-      </form>
-      <form>
+
         {isInput && (
           <div>
-            <Tag
-              type="file"
-              onChange={handleFileChange}
-            />
-            <ButtonTag
+            {Tag && <Tag type="file" onChange={handleFileChange} />}
+           {ButtonTag &&<ButtonTag
               style={{
                 borderRadius: "5px",
                 marginTop: "30px",
@@ -113,16 +107,16 @@ const AuthForm = ({ submitTitle, submit, Tag, isInput, ButtonTag }: Props) => {
               onClick={handleSubmitFile}
             >
               Upload picture
-            </ButtonTag>
+            </ButtonTag>}
           </div>
         )}
+        <button
+          style={{ borderRadius: "10px", padding: "10px", width: "300px" }}
+          type="submit"
+        >
+          {loading ? "Loading..." : submitTitle}
+        </button>
       </form>
-      <button
-        style={{ borderRadius: "10px", padding: "10px", width: "300px" }}
-        type="submit"
-      >
-        {loading ? "Loading..." : submitTitle}
-      </button>
     </>
   );
 };

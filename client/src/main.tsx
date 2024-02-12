@@ -4,7 +4,6 @@ import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout.tsx";
 import Error404 from "./pages/Error404.tsx";
 import Homepage from "./pages/Homepage.tsx";
-import Users from "./pages/Users.tsx";
 import { AuthContextProvider } from "./context/AuthContext.tsx";
 import Profile from "./pages/Profile.tsx";
 import Signup from "./pages/Signup.tsx";
@@ -20,7 +19,6 @@ const router = createBrowserRouter([
           <Outlet />
           <Footer />
         </Layout>
-       
       </AuthContextProvider>
     ),
     children: [
