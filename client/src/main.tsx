@@ -3,13 +3,13 @@ import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout.tsx";
 import Error404 from "./pages/Error404.tsx";
-import Homepage from "./pages/Homepage.tsx";
+import Homepage from "./pages/Homepage/Homepage.tsx";
 import { AuthContextProvider } from "./context/AuthContext.tsx";
-import Profile from "./pages/Profile.tsx";
-import Signup from "./pages/Signup.tsx";
-import Login from "./pages/Login.tsx";
-import Allposts from "./pages/Allposts.tsx";
-import Footer from "./components/Footer.tsx";
+import Profile from "./pages/Userprofile/Profile.tsx";
+import Signup from "./pages/Signup/Signup.tsx";
+import Login from "./pages/Login/Login.tsx";
+import Allposts from "./pages/Allposts/Allposts.tsx";
+import Footer from "./components/Footer/Footer.tsx";
 
 const router = createBrowserRouter([
   {

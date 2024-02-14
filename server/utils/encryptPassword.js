@@ -14,4 +14,18 @@ const encryptPassword = async (userPassword) => {
   }
 };
 
-export default encryptPassword;
+const verifyPassword = async (myPlaintextPassword, hash) => {
+  try {
+    const isPasswordCorrect = await bcrypt.compare(myPlaintextPassword, hash);
+    if (isPasswordCorrect) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("error verifyng password");
+    return false;
+  }
+};
+
+export { encryptPassword, verifyPassword };

@@ -1,5 +1,5 @@
-import { useState, createContext, PropsWithChildren } from "react";
-import { User } from "../@types/users";
+import { useState, createContext, PropsWithChildren, useEffect } from "react";
+import { User, LoginResponse } from "../@types/users";
 import baseUrl from "../utils/baseurl";
 import { ResNotOk } from "../@types";
 
@@ -7,10 +7,11 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  signup: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, username: string) => Promise<void>;
   updateUser: (values: {
     email: string;
     username: string | undefined;
+    userpicture: string | undefined;
   }) => Promise<void>;
   loading: boolean;
 }
@@ -38,8 +39,9 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const signup = async (email: string, password: string) => {
-    if (!email || !password) return alert("All fields must be included.");
+  const signup = async (email: string, password: string, username: string) => {
+    if (!email || !password || !username)
+      return alert("All fields must be included.");
 
     const headers = new Headers();
     headers.append("Content-Type", "application/x-www-form-urlencoded");
@@ -64,41 +66,62 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         console.log(result);
       }
     } catch (error) {
-      console.log(error);
+      console.log("errorrr signing up at auth context", error);
     }
   };
 
   const login = async (email: string, password: string) => {
-    const headers = new Headers();
-    headers.append("Content-Type", "application/x-www-form-urlencoded");
-    const body = new URLSearchParams();
-    body.append("email", email);
-    body.append("password", password);
-    const requestOptions = {
-      method: "POST",
-      headers,
-      body,
-    };
-    try {
-      const response = await fetch(
-        `${baseUrl}/api/users/login`,
-        requestOptions
-      );
-      if (response.ok) {
-        const result = await response.json() as User;
-        setUser(result);
-      } else {
-        const result = await response.json() as ResNotOk;
-        console.log(result);
+    if (!email || !password) {
+      alert("Some fields are missing");
+      return;
+    }
+
+    //create request for our backend
+
+    if (email && password) {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      const urlencoded = new URLSearchParams();
+      urlencoded.append("email", email);
+      urlencoded.append("password", password);
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: urlencoded,
+      };
+
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/users/login`,
+          requestOptions
+        );
+
+        if (!response.ok) {
+          console.log("response not okay for login");
+          alert("invalid user email or password");
+        }
+
+        if (response.ok) {
+          const result = (await response.json()) as LoginResponse;
+          console.log("result response", result);
+          //set the user information
+          if (result.data.token) {
+            localStorage.setItem("token", result.data.token);
+            setUser(result.data.user);
+          }
+        }
+      } catch (error) {
+        console.log("error loggin in user", error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
   const updateUser = async (values: {
     email: string;
     username: string | undefined;
+    userpicture: string | undefined;
   }) => {
     //validation - check email format
     if (!user) return;
@@ -127,9 +150,24 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const checkUserStatus = () => {
+    const isToken = localStorage.getItem("token");
+    if (isToken) {
+      console.log("user is logged in because token");
+    } else {
+      console.log("user is not logged in because token");
+    }
+  };
+
   const logout = () => {
+    //remove token from local storage
+    localStorage.removeItem("token");
     setUser(null);
   };
+
+  useEffect(() => {
+    checkUserStatus();
+  }, [user?.email]);
 
   return (
     <AuthContext.Provider

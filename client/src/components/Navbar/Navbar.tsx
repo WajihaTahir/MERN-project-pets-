@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
-import "../Navbar.css";
+import { AuthContext } from "../../context/AuthContext";
+import "./Navbar.css";
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
+
   return (
     <nav>
       <div className="navbar">
@@ -48,6 +49,14 @@ function Navbar() {
             <div className="menuitem four">
               <NavLink to={"/posts"}>
                 <p>All Pet Posts</p>
+              </NavLink>
+            </div>
+          )}
+
+          {user && (
+            <div className="menuitem five">
+              <NavLink to={"/profile"}>
+                <p>User Profile</p>
               </NavLink>
             </div>
           )}

@@ -1,8 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import "../login.css";
-import { UploadFileResponse } from "../@types/index.ts";
-import baseUrl from "../utils/baseurl.ts";
-import { User } from "../@types/users.ts";
+import { useNavigate } from "react-router-dom";
+import "./signup.css";
+import { UploadFileResponse } from "../../@types/index.ts";
+import baseUrl from "../../utils/baseurl.ts";
+import { User } from "../../@types/users.ts";
 
 type RegisterResponse = {
   message: string;
@@ -13,8 +14,11 @@ type RegisterResponse = {
 };
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
+
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     console.log("e target", e.target.files?.[0]);
@@ -89,6 +93,10 @@ const Signup = () => {
         );
         const result = (await response.json()) as RegisterResponse;
         console.log("result for signup", result);
+        if (!result.error) {
+          // If successful, navigate to the home page
+          navigate("/");
+        }
       } catch (error) {
         console.log("error signing up a userrr", error);
       }
@@ -98,51 +106,46 @@ const Signup = () => {
   };
   return (
     <>
-      <h1>Sign Up Here</h1>
-      <div>
-        <div>
+      <div className="signuppage">
+        <div className="signupheading">
+          <h2>Sign Up Here</h2>
+        </div>
+        <div className="fileupload">
           <form onSubmit={handleSubmitImage}>
             <input type="file" onChange={handleFileSelect} />
             <button type="submit">Upload A Picture</button>
           </form>
         </div>
-        <form
-          onSubmit={handleSubmitSignup}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "1rem",
-          }}
-        >
+        <form className="signupform" onSubmit={handleSubmitSignup}>
           <label htmlFor="email">Enter Email</label>
           <input
+            className="emailinput"
             type="email"
             name="email"
             placeholder="Enter your email"
             onChange={handleInputCredentialsChange}
-            style={{ borderRadius: "10px", padding: "10px", width: "300px" }}
           />
           <label htmlFor="username">Enter Username</label>
 
           <input
+            className="usernameinput"
             type="text"
             name="username"
             placeholder="Enter your username"
             onChange={handleInputCredentialsChange}
-            style={{ borderRadius: "10px", padding: "10px", width: "300px" }}
           />
           <label htmlFor="username">Enter Password</label>
 
           <input
+            className="passwordinput"
             type="password"
             name="password"
             placeholder="Password"
             onChange={handleInputCredentialsChange}
-            style={{ borderRadius: "10px", padding: "10px", width: "300px" }}
           />
-
-          <button style={{ marginBottom: "400px" }}>Register</button>
+          <div>
+            <button className="registerbutton">Register</button>
+          </div>
         </form>
       </div>
     </>

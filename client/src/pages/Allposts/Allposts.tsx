@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import baseUrl from "../utils/baseurl";
-import { Post } from "../@types/posts";
+import baseUrl from "../../utils/baseurl";
+import { Post } from "../../@types/posts";
 
 type APIResponse = {
   allPosts: Post[];

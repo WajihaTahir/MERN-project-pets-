@@ -1,0 +1,90 @@
+.navbar {
+  padding: 0;
+  margin: 0;
+  background-color: black;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.menu {
+  position: fixed;
+  height: 100%;
+  width: 70px;
+  background: rgb(2, 42, 46);
+  opacity: 0.6;
+  transition: width 1s;
+  overflow: hidden;
+  font-family: "Roboto", sans-serif;
+  z-index: 99;
+  box-shadow: inset -8px 0px 16px -6px rgba(0, 0, 0, 0.2);
+}
+.menu:hover {
+  width: 220px;
+}
+
+.menuitem {
+  height: 20%;
+  line-height: 30px;
+  position: relative;
+  padding: 10px;
+  transition: border 0.9s;
+}
+
+.menuitem:hover {
+  background: (0, 0, 0, 0.5);
+  cursor: pointer;
+}
+.one {
+  border-left: 0px solid #16a085;
+}
+
+.one:hover {
+  border-left: 50px solid rgb(8, 251, 255);
+}
+
+.two {
+  border-left: 0px solid #e7dada;
+}
+
+.two:hover {
+  border-left: 50px solid rgb(234, 16, 125);
+}
+
+.three {
+  border-left: 0px solid #4a4d9a;
+}
+
+.three:hover {
+  border-left: 50px solid rgb(241, 191, 11);
+}
+
+.threehalf {
+  border-left: 0px solid #08f400;
+}
+
+.threehalf:hover {
+  border-left: 50px solid rgb(11, 241, 46);
+}
+
+.four {
+  border-left: 0px solid #96cb2c;
+}
+
+.four:hover {
+  border-left: 50px solid rgb(2, 2, 244);
+}
+.five {
+  border-left: 0px solid #cb2c37;
+}
+
+.five:hover {
+  border-left: 50px solid rgb(244, 2, 2);
+}
+button {
+  background-color: none;
+}

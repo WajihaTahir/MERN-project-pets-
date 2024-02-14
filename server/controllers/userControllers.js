@@ -2,8 +2,9 @@ import { isValidObjectId } from "mongoose";
 import UserModel from "../models/userModel.js";
 import cloudinaryConfig from "../config/cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
-import encryptPassword from "../utils/encryptPassword.js";
+import { encryptPassword, verifyPassword } from "../utils/encryptPassword.js";
 import validator from "validator";
+import { generateToken } from "../utils/tokenServices.js";
 
 const test = (req, res) => {
   res.send("testing successful");
@@ -52,12 +53,17 @@ const signup = async (req, res) => {
   if (!validator.isEmail(email)) {
     return res.status(400).json({ error: "Email is not valid" });
   }
-  if (!validator.isStrongPassword(password)) {
+  // if (!validator.isStrongPassword(password)) {
+  //   return res.status(400).json({ error: "Password is not strong enough" });
+  // }
+  const options = {
+    min: 2,
+    max: 10,
+  };
+  if (!validator.isLength(password, options)) {
     return res.status(400).json({ error: "Password is not strong enough" });
   }
-  if (validator.isEmpty(username)) {
-    return res.status(400).json({ error: "Username can't be empty" });
-  }
+
   try {
     //if all credentials provided, checking if there is an existing user.
     const existingUser = await UserModel.findOne({ email: email });
@@ -116,21 +122,52 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+  console.log("email, password :>> ", email, password);
   if (!email || !password)
     return res.status(400).json({ error: "All fields must be included" });
   try {
     const foundUser = await UserModel.findOne({ email: email });
+
     if (!foundUser)
       return res.status(404).json({ error: "no user with that email" });
-    if (foundUser.password === password) {
-      const user = {
-        _id: foundUser._id,
-        email: foundUser.email,
-        username: foundUser.username,
-        createdAt: foundUser.createdAt,
-      };
-      return res.status(200).json(user);
-    } else return res.status(400).json({ error: "password incorrect" });
+    if (foundUser) {
+      const isPasswordCorrect = await verifyPassword(
+        password,
+        foundUser.password
+      );
+
+      if (!isPasswordCorrect) {
+        return res.status(500).json({
+          error: "password incorrect",
+        });
+      }
+      if (isPasswordCorrect) {
+        const token = generateToken(foundUser._id);
+        if (!token) {
+          return res.status(500).json({
+            message: "error occured during generating the token",
+            error: true,
+            data: null,
+          });
+        }
+        if (token) {
+          const user = {
+            _id: foundUser._id,
+            email: foundUser.email,
+            username: foundUser.username,
+            createdAt: foundUser.createdAt,
+          };
+          return res.status(200).json({
+            message: "user logged in successfully",
+            error: false,
+            data: {
+              user: user,
+              token,
+            },
+          });
+        }
+      }
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Something went wrong" });
