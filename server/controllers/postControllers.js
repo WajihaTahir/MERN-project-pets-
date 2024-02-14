@@ -78,8 +78,8 @@ const createPost = async (req, res) => {
             userPicture: savedPost.userPicture,
             caption: savedPost.caption,
             image: savedPost.image,
-            time: savedEncounter.time,
-            likes: savedEncounter.likes,
+            time: savedPost.time,
+            likes: savedPost.likes,
           },
         });
       } catch (error) {
