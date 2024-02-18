@@ -5,9 +5,9 @@
 }
 
 .homebody {
-  background-image: url("../src/assets/allpets.jpg");
+  background-image: url("../../assets/diffpets.jpg");
   background-size: cover;
-  height: 1000px;
+  height: 100vh;
   width: 100vw;
   color: black;
   font-family: "Roboto", sans-serif;

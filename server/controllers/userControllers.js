@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { encryptPassword, verifyPassword } from "../utils/encryptPassword.js";
 import validator from "validator";
 import { generateToken } from "../utils/tokenServices.js";
+import PetModel from "../models/petModel.js";
 
 const test = (req, res) => {
   res.send("testing successful");
@@ -207,6 +208,7 @@ const uploadPicture = async (req, res) => {
     try {
       const pictureUpload = await cloudinary.uploader.upload(req.file.path, {
         folder: "userProfiles",
+        transformation: [{ width: 400, height: 400, crop: "fill" }],
       });
       console.log("picture upload", pictureUpload);
 
@@ -226,6 +228,32 @@ const uploadPicture = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  console.log("profile from user");
+  console.log("req get profile", req.user);
+  const { user } = req;
+  if (!user) {
+    res.status(500).json({
+      message: "you are not logged in and authorized",
+      error: true,
+      data: null,
+    });
+  }
+  if (user) {
+    res.status(200).json({
+      message: "request successful",
+      error: false,
+      data: {
+        user: {
+          username: user.username,
+          email: user.email,
+          userpicture: user.userpicture,
+        },
+      },
+    });
+  }
+};
+
 export {
   test,
   getAllUsers,
@@ -234,4 +262,5 @@ export {
   login,
   updateUser,
   uploadPicture,
+  getProfile,
 };

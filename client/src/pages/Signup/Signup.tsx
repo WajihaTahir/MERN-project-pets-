@@ -25,6 +25,10 @@ const Signup = () => {
     setSelectedFile(e.target.files?.[0] || "");
   };
 
+  const handleLoginClick = () => {
+    navigate("/login"); // Navigate to the signup page
+  };
+
   const handleInputCredentialsChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserCredentials({
       ...(userCredentials as User),
@@ -104,65 +108,115 @@ const Signup = () => {
       console.log("enter required fields first");
     }
   };
+  // return (
+  //   <>
+  //     <div className="signuppage">
+  //       <div className="signupheading">
+  //         <h2>Sign Up Here</h2>
+  //       </div>
+  //       <div className="fileupload">
+  //         <form onSubmit={handleSubmitImage}>
+  //           <input type="file" onChange={handleFileSelect} />
+  //           <button type="submit">Upload A Picture</button>
+  //         </form>
+  //       </div>
+  //       <form className="signupform" onSubmit={handleSubmitSignup}>
+  //         <label htmlFor="email">Enter Email</label>
+  //         <input
+  //           className="emailinput"
+  //           type="email"
+  //           name="email"
+  //           placeholder="Enter your email"
+  //           onChange={handleInputCredentialsChange}
+  //         />
+  //         <label htmlFor="username">Enter Username</label>
+
+  //         <input
+  //           className="usernameinput"
+  //           type="text"
+  //           name="username"
+  //           placeholder="Enter your username"
+  //           onChange={handleInputCredentialsChange}
+  //         />
+  //         <label htmlFor="username">Enter Password</label>
+
+  //         <input
+  //           className="passwordinput"
+  //           type="password"
+  //           name="password"
+  //           placeholder="Password"
+  //           onChange={handleInputCredentialsChange}
+  //         />
+  //         <div>
+  //           <button className="registerbutton">Register</button>
+  //         </div>
+  //       </form>
+  //     </div>
+  //   </>
+
+  // <>
+  //   <div className="body">
+  //     <div style={{ marginBottom: "50px" }}>
+  //       <h3>Signup</h3>
+  //     </div>
+  //     <AuthForm
+  //       submitTitle="signup"
+  //       submit={signup}
+  //       isInput={true}
+  //       Tag="input"
+  //       ButtonTag="button"
+  //     />
+  //   </div>
+  // </>
   return (
     <>
-      <div className="signuppage">
-        <div className="signupheading">
-          <h2>Sign Up Here</h2>
+      <div className="signup-container">
+        <div className="signup-heading">
+          <h2>Sign Up</h2>
         </div>
-        <div className="fileupload">
-          <form onSubmit={handleSubmitImage}>
-            <input type="file" onChange={handleFileSelect} />
-            <button type="submit">Upload A Picture</button>
-          </form>
-        </div>
-        <form className="signupform" onSubmit={handleSubmitSignup}>
-          <label htmlFor="email">Enter Email</label>
+        <form className="signup-form" action="#" onSubmit={handleSubmitSignup}>
           <input
-            className="emailinput"
             type="email"
             name="email"
-            placeholder="Enter your email"
+            placeholder="Enter Email"
             onChange={handleInputCredentialsChange}
+            required
           />
-          <label htmlFor="username">Enter Username</label>
-
           <input
-            className="usernameinput"
             type="text"
             name="username"
-            placeholder="Enter your username"
+            placeholder="Enter Username"
             onChange={handleInputCredentialsChange}
+            required
           />
-          <label htmlFor="username">Enter Password</label>
-
           <input
-            className="passwordinput"
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="Enter Password"
             onChange={handleInputCredentialsChange}
+            required
           />
-          <div>
-            <button className="registerbutton">Register</button>
-          </div>
+          <form onSubmit={handleSubmitImage}>
+            <input type="file" onChange={handleFileSelect} />
+            <button className="uploadpicture" type="submit">
+              Upload A Picture
+            </button>
+          </form>
+          <input type="submit" value="Sign Up" />
         </form>
+        <div className="login-link">
+          <p>
+            Already have an account?{" "}
+            <span
+              onClick={handleLoginClick}
+              style={{ cursor: "pointer", color: "blue" }}
+            >
+              Login
+            </span>
+          </p>
+        </div>
       </div>
     </>
-    // <>
-    //   <div className="body">
-    //     <div style={{ marginBottom: "50px" }}>
-    //       <h3>Signup</h3>
-    //     </div>
-    //     <AuthForm
-    //       submitTitle="signup"
-    //       submit={signup}
-    //       isInput={true}
-    //       Tag="input"
-    //       ButtonTag="button"
-    //     />
-    //   </div>
-    // </>
   );
 };
 

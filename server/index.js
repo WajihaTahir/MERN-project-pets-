@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import petRouter from "./routes/petRoutes.js";
 import postRouter from "./routes/postRoutes.js";
 import cloudinaryConfig from "./config/cloudinary.js";
+import passport from "passport";
+import jwtStrategy from "./config/passportConfig.js";
 
 const app = express();
 
@@ -19,13 +21,14 @@ const addMiddlewares = () => {
   );
   app.use(cors()); //cross origin resource sharing, allowing to handle requests from different origin.
   cloudinaryConfig();
-
+  app.use(passport.initialize());
+  passport.use(jwtStrategy);
 };
 
 const addRoutes = () => {
-  app.use("/api/users", userRouter);  //to mount the userRouter middleware to the specified path.
+  app.use("/api/users", userRouter); //to mount the userRouter middleware to the specified path.
   app.use("/api/pets", petRouter);
-  app.use("/api/posts", postRouter)
+  app.use("/api/posts", postRouter);
   //"/api/users -> the base path for the routes handled by the userRouter coming from that file.
   app.use(
     "*",
@@ -52,17 +55,13 @@ const DBConnection = async () => {
   }
 };
 
-
-
 //IIFE
-(async function controller () {
+(async function controller() {
   await DBConnection();
   addMiddlewares();
   addRoutes();
   startServer();
-})()
-
-
+})();
 
 // mongoose.connect(process.env.MONGO_URI)
 //   .then(() => {

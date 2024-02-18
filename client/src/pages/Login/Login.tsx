@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import "./login.css";
 
 type LoginCredentials = {
@@ -10,6 +10,8 @@ type LoginCredentials = {
 
 const Login = () => {
   const { user, login } = useContext(AuthContext);
+  const navigate = useNavigate(); // Use useNavigate hook to get navigation function
+
   const [loginCredentials, setLoginCredentials] = useState<LoginCredentials>({
     email: "",
     password: "",
@@ -22,7 +24,9 @@ const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  const handleSignUpClick = () => {
+    navigate("/signup"); // Navigate to the signup page
+  };
   if (user) {
     return <Navigate to="/posts" />;
   }
@@ -31,41 +35,44 @@ const Login = () => {
     e.preventDefault();
     login(loginCredentials.email, loginCredentials.password);
   };
+
   return (
     <>
-      <div className="loginform">
-        <div className="loginheading">
-          <h2>Login Here</h2>
+      <div className="login-container">
+        <div className="login-heading">
+          <h2>Login</h2>
         </div>
-        <form action="" onSubmit={handleSubmitLogin}>
-          <label htmlFor="email">Enter Email</label>
+        <form className="login-form" action="#" onSubmit={handleSubmitLogin}>
           <input
             type="email"
-            name="email"
-            id="email"
             value={loginCredentials?.email}
+            name="email"
+            placeholder="Enter Email"
             onChange={handleInputChange}
+            required
           />
-          <label htmlFor="password">Enter Password</label>
           <input
             type="password"
             name="password"
-            id="password"
+            placeholder="Enter Password"
             value={loginCredentials?.password}
             onChange={handleInputChange}
+            required
           />
-          <button className="loginbutton" type="submit">
-            Login
-          </button>
+          <input type="submit" value="Login" />
         </form>
-      </div>
-
-      {/* <div className="body">
-        <div style={{ marginBottom: "50px" }}>
-          <h3>Login</h3>
+        <div className="sign-up-link">
+          <p>
+            Don't have an account?{" "}
+            <span
+              onClick={handleSignUpClick}
+              style={{ cursor: "pointer", color: "blue" }}
+            >
+              Sign up
+            </span>
+          </p>
         </div>
-        <AuthForm submitTitle="login" submit={login} />
-      </div> */}
+      </div>
     </>
   );
 };

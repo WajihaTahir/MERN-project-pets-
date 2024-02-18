@@ -1,13 +1,21 @@
 import express from "express";
 import {
-  createPost,
+  addAComment,
+  createAPost,
   getAllPosts,
   getPostbyId,
 } from "../controllers/postControllers.js";
+import jwtAuth from "../middlewares/jwtAuth.js";
+import multerUpload from "../middlewares/multer.js";
 
 const postRouter = express.Router();
 
 postRouter.get("/allposts", getAllPosts);
-postRouter.get("/:_id", getPostbyId);
-postRouter.get("/postnewpost", createPost);
+postRouter.post("/addacomment/:id", jwtAuth, addAComment);
+postRouter.get("/post/:_id", getPostbyId);
+postRouter.post(
+  "/postnewpost",
+  [jwtAuth, multerUpload.single("image")],
+  createAPost
+);
 export default postRouter;

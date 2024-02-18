@@ -150,9 +150,28 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const checkUserStatus = () => {
-    const isToken = localStorage.getItem("token");
-    if (isToken) {
+  const checkUserStatus = async () => {
+    const token = localStorage.getItem("token");
+
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+    };
+
+    const getUserProfile = await fetch(
+      `${baseUrl}/api/users/profile`,
+      requestOptions
+    );
+    if (getUserProfile.ok) {
+      const result = await getUserProfile.json();
+      console.log("result", result);
+      setUser(result.data.user);
+    }
+
+    if (token) {
       console.log("user is logged in because token");
     } else {
       console.log("user is not logged in because token");

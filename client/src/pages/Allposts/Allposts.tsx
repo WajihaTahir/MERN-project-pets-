@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import baseUrl from "../../utils/baseurl";
 import { Post } from "../../@types/posts";
+import PostView from "../../components/Post/PostView.tsx";
+import "../Allposts/Allposts.css";
+import { useNavigate } from "react-router";
 
 type APIResponse = {
   allPosts: Post[];
@@ -9,6 +12,7 @@ type APIResponse = {
 
 function Allposts() {
   const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchAllPosts = () => {
       console.log("baseUrl :>> ", baseUrl);
@@ -27,33 +31,21 @@ function Allposts() {
 
   return (
     <>
-      <h3>Here are all posts</h3>
+      <h6>All Pet Posts &#128513;</h6>
+      <button
+        className="createnewpost"
+        onClick={() => {
+          navigate("/createnewpost");
+          //CreateNewPost();
+        }}
+      >
+        Create a new post
+      </button>
+      <div></div>
 
       {allPosts.map((post) => {
-        return (
-          <div key={post._id}>
-            <p>Caption: {post.caption}</p>
-            <p>User Name: {post.userName}</p>
-            {post.comments && post.comments.length > 0 && (
-              <ul>
-                {post.comments.map((comment, index: number) => (
-                  <li key={index}>
-                    <img
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                      }}
-                      src={comment.commentorPicture}
-                    />
-                    {comment.commentorName}: {comment.comment}
-                    <img src={comment.commentorPicture}></img>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        );
+        console.log("postssss", post);
+        return <PostView post={post} />;
       })}
     </>
   );

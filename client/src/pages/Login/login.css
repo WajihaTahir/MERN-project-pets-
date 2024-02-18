@@ -6,43 +6,86 @@ body {
   height: 100vh;
   width: 100vw;
   font-family: "Roboto", sans-serif;
-  background: rgb(238, 174, 202);
+  background: rgb(196, 157, 179);
   background: radial-gradient(
     circle,
-    rgba(238, 174, 202, 1) 0%,
-    rgba(145, 191, 245, 1) 100%
+    rgb(87, 121, 162) 0%,
+    rgb(220, 124, 201) 100%
   );
 }
-.loginheading {
-  margin-bottom: 100px;
+
+.login-container {
+  width: 360px;
+  background-color: #fff;
+  padding: 40px;
+  margin: 100px auto;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-.loginform {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 200px;
+.login-heading {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-.loginbutton {
-  color: #090909;
-  padding: 0.3em 1em;
-  font-size: 18px;
-  border-radius: 0.2em;
-  background: #e8e8e8;
+.login-heading h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.login-form {
+  margin-bottom: 20px;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.login-form input[type="submit"] {
+  width: 100%;
+  background-color: #a84caf;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  border: 1px solid #e8e8e8;
-  transition: all 0.3s;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
-  margin-bottom: 200px;
-}
-.loginbutton:active {
-  color: #666;
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+  font-size: 16px;
 }
 
-input {
-  border-radius: 5px;
-  padding: 7px;
+.login-form input[type="submit"]:hover {
+  background-color: #4548a0;
+}
+
+.login-form .forgot-password {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.login-form .forgot-password a {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.login-form .forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.login-form .sign-up-link {
+  text-align: center;
+}
+
+.login-form .sign-up-link a {
+  color: #666;
+  text-decoration: none;
+}
+
+.login-form .sign-up-link a:hover {
+  text-decoration: underline;
 }

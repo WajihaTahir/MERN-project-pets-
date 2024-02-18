@@ -53,10 +53,25 @@ function Navbar() {
             </div>
           )}
 
-          {user && (
+          {/* {user && (
             <div className="menuitem five">
               <NavLink to={"/profile"}>
                 <p>User Profile</p>
+              </NavLink>
+            </div>
+          )} */}
+
+          {user && (
+            <div className="menuitem six">
+              <NavLink to={"/userprofile"}>
+                <p>User Profile 2</p>
+              </NavLink>
+            </div>
+          )}
+          {user && (
+            <div className="menuitem seven">
+              <NavLink to={"/createnewpost"}>
+                <p>New Post</p>
               </NavLink>
             </div>
           )}

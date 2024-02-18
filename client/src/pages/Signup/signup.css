@@ -1,4 +1,4 @@
-.signuppage {
+/* .signuppage {
   margin: 0;
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -6,11 +6,11 @@
   height: 100vh;
   width: 100vw;
   font-family: "Roboto", sans-serif;
-  background: rgb(238, 174, 202);
+  background: rgb(250, 249, 249);
   background: radial-gradient(
     circle,
-    rgba(238, 174, 202, 1) 0%,
-    rgba(145, 191, 245, 1) 100%
+    rgb(243, 241, 242) 0%,
+    rgb(228, 231, 235) 100%
   );
 }
 
@@ -81,4 +81,82 @@ input {
 .registerbutton:active {
   color: #666;
   box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+} */
+.signup-container {
+  width: 360px;
+  background-color: #fff;
+  padding: 40px;
+  margin: 100px auto;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.signup-heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.signup-heading h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.signup-form {
+  margin-bottom: 20px;
+}
+
+.signup-form input[type="email"],
+.signup-form input[type="text"],
+.signup-form input[type="password"],
+.signup-form input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.signup-form input[type="submit"] {
+  width: 100%;
+  background-color: #a84caf;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.signup-form input[type="submit"]:hover {
+  background-color: #4548a0;
+}
+
+.uploadpicture {
+  width: 50%;
+  background-color: #534caf;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.login-link {
+  text-align: center;
+}
+
+.login-link p {
+  margin-top: 10px;
+}
+
+.login-link span {
+  color: #666;
+  cursor: pointer;
+}
+
+.login-link span:hover {
+  text-decoration: underline;
 }

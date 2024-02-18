@@ -9,17 +9,14 @@ const commentSchema = new Schema({
     type: String,
     required: true,
   },
-
   commentorPicture: {
     type: String,
     required: true,
   },
-
   comment: {
     type: String,
     required: true,
   },
-
   commentTime: {
     type: Date,
     required: true,
@@ -27,18 +24,21 @@ const commentSchema = new Schema({
 });
 
 const postSchema = new mongoose.Schema({
-  userName: { type: String, required: true },
-  userPicture: { type: String, required: false },
   caption: { type: String, required: true },
   image: { type: String, required: true },
-  time: { type: Date, required: false },
   comments: [commentSchema],
-  likes: [
-    {
-      type: String,
-    },
-  ],
-  // ownedbyuser: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  likes: [{ type: String }],
+  ownedbyuser: { type: mongoose.Schema.Types.ObjectId, ref: "user" }, // Reference to user schema
+  time: { type: Date, required: false },
+});
+
+// Define a virtual property to get userName from associated user data
+postSchema.virtual("userName", {
+  ref: "user",
+  localField: "ownedbyuser",
+  foreignField: "_id",
+  justOne: true,
+  autopopulate: true, // Automatically populate the user data
 });
 
 const PostModel = mongoose.model("post", postSchema);

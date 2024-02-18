@@ -1,0 +1,107 @@
+h6 {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.createnewpost {
+  background-color: rgb(202, 14, 102);
+  color: white;
+  font-weight: normal;
+  font-size: 14px;
+  padding: 10px;
+  border-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 50px;
+}
+
+.createnewpost:hover {
+  background-color: lightpink;
+}
+
+.usernamepicture {
+  width: 500px;
+  display: flex;
+  flex-direction: row;
+  border-style: solid;
+  background-color: rgb(209, 162, 216);
+  border-color: rgb(208, 212, 220);
+}
+.postimage {
+  height: 400px;
+  width: 500px;
+  border-color: cadetblue solid;
+}
+.caption {
+  background-color: rgb(235, 209, 239);
+  width: 500px;
+  text-align: justify;
+  font-size: 18px;
+}
+
+.wholepost {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  left: 50%;
+}
+.likecomment {
+  display: flex;
+  align-items: left;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 500px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  background-color: rgb(235, 209, 239);
+}
+.thumbsupicon {
+  text-align: left;
+}
+
+.postcomment {
+  background-color: black;
+  color: rgb(235, 209, 239);
+  font-weight: normal;
+  padding: 10px;
+  border-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.allcomments {
+  width: 500px;
+  display: flex;
+  flex-direction: row;
+  border-style: solid;
+  background-color: rgb(235, 209, 239);
+  border-color: rgb(55, 52, 52);
+  border-radius: 5px;
+  margin-bottom: 5px;
+  align-items: center;
+}
+.commentornameimage {
+  width: 500px;
+  display: flex;
+  flex-direction: row;
+  border-style: solid;
+  background-color: rgb(235, 209, 239);
+  border-color: rgb(55, 52, 52);
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.showmorecomments {
+  background-color: rgb(114, 19, 155);
+  color: white;
+  font-weight: normal;
+  font-size: 12px;
+  padding: 5px;
+  border-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 50px;
+}

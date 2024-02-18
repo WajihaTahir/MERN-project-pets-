@@ -10,6 +10,8 @@ import Signup from "./pages/Signup/Signup.tsx";
 import Login from "./pages/Login/Login.tsx";
 import Allposts from "./pages/Allposts/Allposts.tsx";
 import Footer from "./components/Footer/Footer.tsx";
+import Userprofilepage from "./pages/Userprofile/Userprofilepage.tsx";
+import CreateNewPost from "./pages/CreateNewPost/CreateNewPost.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +19,7 @@ const router = createBrowserRouter([
       <AuthContextProvider>
         <Layout>
           <Outlet />
-          <Footer />
+          {/* <Footer /> */}
         </Layout>
       </AuthContextProvider>
     ),
@@ -37,6 +39,15 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/createnewpost",
+        element: <CreateNewPost />,
+      },
+
+      {
+        path: "/userprofile",
+        element: <Userprofilepage />,
       },
 
       {
