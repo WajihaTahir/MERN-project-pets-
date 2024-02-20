@@ -28,7 +28,12 @@ userRouter.post("/signup", signup);
 
 userRouter.post("/login", login);
 
-userRouter.post("/update/:id", updateUser);
+userRouter.patch(
+  "/updateprofile/:_id",
+  jwtAuth,
+  multerUpload.single("userpicture"),
+  updateUser
+);
 
 userRouter.post(
   "/pictureUpload",

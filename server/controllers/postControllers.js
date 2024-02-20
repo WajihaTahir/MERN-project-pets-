@@ -99,10 +99,44 @@ const addAComment = async (req, res) => {
     if (!post) {
       return res.status(500).json({ error: "id not found" });
     }
-    return res.status(200).json({ post });
+    const newCommentId = post.comments[post.comments.length - 1]._id;
+    return res.status(200).json({ post, newCommentId });
   } catch (error) {
     return res.status(500).json({ error: error });
   }
 };
 
-export { getAllPosts, getPostbyId, createAPost, addAComment };
+const deleteAComment = async (req, res) => {
+  try {
+    const { commentId, postId } = req.body;
+    console.log("id..", commentId);
+    const post = await PostModel.findByIdAndUpdate(
+      postId,
+      { $pull: { comments: { _id: commentId } } },
+      { returnOriginal: false }
+    );
+
+    // console.log("commentId :>> ", commentId);
+    // console.log("_id", _id);
+
+    // console.log(req.body);
+
+    if (!post) {
+      return res.status(404).json({
+        msg: "Comment not found",
+      });
+    }
+
+    res.status(200).json({
+      msg: "Comment deleted successfully",
+      post,
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "Something went wrong",
+      error: error,
+    });
+  }
+};
+
+export { getAllPosts, getPostbyId, createAPost, addAComment, deleteAComment };

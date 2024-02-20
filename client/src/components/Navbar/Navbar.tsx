@@ -64,7 +64,7 @@ function Navbar() {
           {user && (
             <div className="menuitem six">
               <NavLink to={"/userprofile"}>
-                <p>User Profile 2</p>
+                <p>User Profile</p>
               </NavLink>
             </div>
           )}

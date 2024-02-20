@@ -2,6 +2,7 @@ import express from "express";
 import {
   addAComment,
   createAPost,
+  deleteAComment,
   getAllPosts,
   getPostbyId,
 } from "../controllers/postControllers.js";
@@ -12,6 +13,7 @@ const postRouter = express.Router();
 
 postRouter.get("/allposts", getAllPosts);
 postRouter.post("/addacomment/:id", jwtAuth, addAComment);
+postRouter.delete("/deleteacomment/", jwtAuth, deleteAComment);
 postRouter.get("/post/:_id", getPostbyId);
 postRouter.post(
   "/postnewpost",

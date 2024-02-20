@@ -37,7 +37,7 @@ export const AuthContext = createContext(defaultValue);
 
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   const signup = async (email: string, password: string, username: string) => {
     if (!email || !password || !username)
@@ -109,6 +109,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
           //set the user information
           if (result.data.token) {
             localStorage.setItem("token", result.data.token);
+            console.log("result.data.user", result.data.user);
             setUser(result.data.user);
           }
         }
@@ -129,13 +130,15 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     headers.append("Content-Type", "application/json");
     const body = JSON.stringify(values);
     const requestOptions = {
-      method: "POST",
+      method: "PATCH",
       headers,
       body,
     };
+    console.log("reqopts", requestOptions);
     try {
+      console.log("user._id", user);
       const response = await fetch(
-        `${baseUrl}/api/users/update/${user._id}`,
+        `${baseUrl}/api/users/updateprofile/${user._id}`,
         requestOptions
       );
       if (response.ok) {
@@ -167,8 +170,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     );
     if (getUserProfile.ok) {
       const result = await getUserProfile.json();
-      console.log("result", result);
-      setUser(result.data.user);
+      console.log("checkUserStatusresult", result);
+      setUser({ ...user, ...result.data.user });
     }
 
     if (token) {

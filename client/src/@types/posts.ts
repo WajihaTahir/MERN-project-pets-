@@ -6,6 +6,7 @@ export interface Comment {
   commentorPicture: string;
   comment: string;
   time: Date;
+  _id: string;
 }
 
 export interface Post {

@@ -1,4 +1,4 @@
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 import UserModel from "../models/userModel.js";
 import cloudinaryConfig from "../config/cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
@@ -178,22 +178,47 @@ const login = async (req, res) => {
 //update an existing user
 
 const updateUser = async (req, res) => {
-  const { id } = req.params;
-  const valid = isValidObjectId(id);
-  console.log(valid);
-  if (!valid) return res.status(400).json({ error: "invalid id" });
-  if (!id) return res.status(400).json({ error: "id is missing" });
+  const { username, email, userpicture } = req.body;
+  const id = req.body._id;
   try {
-    const updatedUser = await UserModel.findByIdAndUpdate(id, req.body, {
-      new: true,
-    }); //to get the updated version
-    if (!updatedUser) return res.status(404).json({ error: "user not found" });
-    res.status(200).json(updatedUser);
+    const updatedUserFields = {};
+    if (username) {
+      const existingUsername = await UserModel.findOne({ username: username });
+      if (existingUsername && username !== req.user.username) {
+        return res.status(400).json({ error: "username is already in use" });
+      }
+      updatedUserFields.username = username;
+    }
+    if (email) {
+      const existingEmail = await UserModel.findOne({ email: email });
+      if (existingEmail && email !== req.user.email) {
+        return res.status(400).json({ error: "email is already in use" });
+      }
+      updatedUserFields.email = email;
+    }
+    if (userpicture) {
+      updatedUserFields.userpicture = userpicture;
+    }
+    const updatedUserData = await UserModel.findByIdAndUpdate(
+      id,
+      updatedUserFields,
+      {
+        new: true,
+      }
+    );
+    return res
+      .status(200)
+      .json({ message: "update successful", user: updatedUserData });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Something went wrong" });
+    res.status.json({ message: "error updating the user info", error: error });
   }
 };
+
+//REVIEW logic to update profile
+//? 1st : check which properties to update are coming in the request
+//? 2nd: IF there is an image coming, we need to upload it to cloudnary
+//? 4th: NICE TO HAVE : what are we gonna do with the previous profile image???
+//? 5th: once Image is uploaded and we have the url from cloudinary, do request to mongoDB to update user profile (findByIdAndUpdate)
 
 //upload the picture for the user profile
 
@@ -245,6 +270,7 @@ const getProfile = async (req, res) => {
       error: false,
       data: {
         user: {
+          _id: user._id,
           username: user.username,
           email: user.email,
           userpicture: user.userpicture,

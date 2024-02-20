@@ -24,6 +24,7 @@ const CreateNewPost = () => {
 
   const onSubmit = async () => {
     setLoading(true);
+
     const token = localStorage.getItem("token");
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -43,15 +44,17 @@ const CreateNewPost = () => {
       setLoading(false);
     } catch (error) {
       console.log("error creating post", error);
-      alert("Couldn't create post");
+      alert("Couldn't create post" + error.message);
       setLoading(false);
     }
   };
   return (
     <div className="create-post-page">
       <div className="container">
-        <h2>Create a Post</h2>
-        <form className="post-form">
+        <h2 style={{ fontFamily: "fantasy" }}>
+          Create a cool post for your pet! &#128008;
+        </h2>
+        <div className="post-form">
           <div className="form-group">
             {loading && <p>Loading...</p>}
             <textarea
@@ -60,7 +63,12 @@ const CreateNewPost = () => {
               name="caption"
               placeholder="Say something about your pet"
               onChange={(e) => setCaption(e.target.value)}
-              style={{ width: "300px", height: "200px" }}
+              style={{
+                width: "700px",
+                height: "200px",
+                fontFamily: "fantasy",
+                fontSize: "20px",
+              }}
             ></textarea>
 
             {imageToShow && (
@@ -68,10 +76,10 @@ const CreateNewPost = () => {
             )}
             <input type="file" onChange={handleFileSelect} />
           </div>
-          <button type="submit" className="btn-submit" onClick={onSubmit}>
+          <button className="btn-submit" onClick={onSubmit}>
             Submit
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

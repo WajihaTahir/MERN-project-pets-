@@ -14,6 +14,9 @@ function PostView({ post }: Props) {
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [showAllComments, setShowAllComments] = useState(false);
+  const [isCommentDelete, setIsCommentDelete] = useState(false);
+  const [updatedComments, setUpdatedComments] = useState();
+  const [isCommentDeleteFail, setIsCommentDeleteFail] = useState(false);
 
   const { user } = useContext(AuthContext);
 
@@ -25,8 +28,55 @@ function PostView({ post }: Props) {
 
   console.log("post", post);
 
+  const handleDeleteComment = async (postId: string, commentId: string) => {
+    console.log("commentId", postId);
+    setIsCommentDelete(false);
+    try {
+      const token = localStorage.getItem("token");
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      // console.log("comment._id :>> ", comment._id);
+      const urlencoded = new URLSearchParams();
+      urlencoded.append("commentId", commentId);
+      urlencoded.append("postId", postId);
+      // const raw = JSON.stringify({
+      //   commentId: commentId,
+      // });
+
+      if (!commentId) {
+        // console.log("comment._id is undefined");
+        return;
+      }
+
+      const requestOptions = {
+        method: "DELETE",
+        headers: myHeaders,
+        body: urlencoded,
+      };
+
+      fetch(`${baseUrl}/api/posts/deleteacomment/`, requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          // console.log("result :>> ", result);
+          setIsCommentDelete(true);
+          setUpdatedComments(result.post.comments);
+          setComments(comments.filter((item) => item._id !== commentId));
+        })
+        .catch((error) => console.log("error", error));
+      setIsCommentDeleteFail(true);
+
+      // console.log("comment", comment._id);
+    } catch (error) {
+      // console.log("error", error);
+      setIsCommentDeleteFail(true);
+    }
+  };
+
   const onSubmit = async () => {
     const token = localStorage.getItem("token");
+    console.log("token", token);
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     const formdata = new URLSearchParams();
@@ -42,18 +92,21 @@ function PostView({ post }: Props) {
         `${baseUrl}/api/posts/addacomment/${post._id}`,
         requestOptions
       );
+      const resJson = await response.json();
       const tempComment: Comment = {
         comment: newComment,
         commentorId: user?._id ?? "",
         commentorName: user?.username ?? "",
         commentorPicture: user?.userpicture ?? "",
         time: new Date(),
+        _id: resJson.newCommentId,
       };
+      console.log("tempcomment", tempComment);
       setComments([...comments, tempComment]);
       setNewComment("");
     } catch (error) {
-      console.log("error creating post", error);
-      alert("Couldn't create post");
+      console.log("error creating comment", error);
+      alert("Couldn't create comment");
     }
   };
 
@@ -122,6 +175,13 @@ function PostView({ post }: Props) {
                       alt="Commentor"
                     />
                     {comment.commentorName}: {comment.comment}
+                    <button
+                      onClick={() => {
+                        handleDeleteComment(post._id, comment._id);
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 ))}
 
@@ -149,9 +209,9 @@ function PostView({ post }: Props) {
               onChange={(e) => {
                 setNewComment(e.target.value);
               }}
-              placeholder="enter a comment"
+              placeholder="what do you say about this post?"
               type="text"
-              style={{ width: "90%", borderRadius: "10px" }}
+              style={{ width: "90%", borderRadius: "10px", fontSize: "16px" }}
             />
             <button className="postcomment" onClick={onSubmit}>
               <FontAwesomeIcon icon={faPaperPlane} />

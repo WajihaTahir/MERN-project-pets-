@@ -1,0 +1,47 @@
+.userprofile-container {
+  width: 400px;
+  height: 600px;
+  background-color: #fff;
+  padding: 40px;
+  margin: 100px auto;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.getuserprofile {
+  width: 80%;
+  background-color: #534caf;
+  color: white;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.useremail,
+.profilepicturetext,
+.username {
+  font-size: 15px;
+  font-weight: normal;
+  margin-bottom: 30px;
+}
+
+.userimage {
+  width: 200px;
+  height: 200px;
+  border: solid purple;
+}
+
+.updateuserprofile {
+  width: 80%;
+  background-color: #a74caf;
+  color: white;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 30px;
+}

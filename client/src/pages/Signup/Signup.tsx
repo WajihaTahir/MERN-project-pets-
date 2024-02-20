@@ -1,9 +1,10 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./signup.css";
 import { UploadFileResponse } from "../../@types/index.ts";
 import baseUrl from "../../utils/baseurl.ts";
 import { User } from "../../@types/users.ts";
+import { AuthContext } from "../../context/AuthContext.tsx";
 
 type RegisterResponse = {
   message: string;
@@ -18,6 +19,7 @@ const Signup = () => {
 
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
+  const { login } = useContext(AuthContext);
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -36,8 +38,7 @@ const Signup = () => {
     });
   };
 
-  const handleSubmitImage = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmitImage = async () => {
     const formdata = new FormData();
     formdata.append("userpicture", selectedFile);
 
@@ -46,6 +47,7 @@ const Signup = () => {
       body: formdata,
     };
     try {
+      console.log("selectedFile", selectedFile);
       const response = await fetch(
         `${baseUrl}/api/users/pictureUpload/`,
         requestOptions
@@ -68,9 +70,7 @@ const Signup = () => {
     }
   };
 
-  const handleSubmitSignup = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSubmitSignup = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     if (userCredentials) {
@@ -99,6 +99,7 @@ const Signup = () => {
         console.log("result for signup", result);
         if (!result.error) {
           // If successful, navigate to the home page
+          await login(userCredentials?.email, userCredentials.password);
           navigate("/");
         }
       } catch (error) {
@@ -108,73 +109,13 @@ const Signup = () => {
       console.log("enter required fields first");
     }
   };
-  // return (
-  //   <>
-  //     <div className="signuppage">
-  //       <div className="signupheading">
-  //         <h2>Sign Up Here</h2>
-  //       </div>
-  //       <div className="fileupload">
-  //         <form onSubmit={handleSubmitImage}>
-  //           <input type="file" onChange={handleFileSelect} />
-  //           <button type="submit">Upload A Picture</button>
-  //         </form>
-  //       </div>
-  //       <form className="signupform" onSubmit={handleSubmitSignup}>
-  //         <label htmlFor="email">Enter Email</label>
-  //         <input
-  //           className="emailinput"
-  //           type="email"
-  //           name="email"
-  //           placeholder="Enter your email"
-  //           onChange={handleInputCredentialsChange}
-  //         />
-  //         <label htmlFor="username">Enter Username</label>
-
-  //         <input
-  //           className="usernameinput"
-  //           type="text"
-  //           name="username"
-  //           placeholder="Enter your username"
-  //           onChange={handleInputCredentialsChange}
-  //         />
-  //         <label htmlFor="username">Enter Password</label>
-
-  //         <input
-  //           className="passwordinput"
-  //           type="password"
-  //           name="password"
-  //           placeholder="Password"
-  //           onChange={handleInputCredentialsChange}
-  //         />
-  //         <div>
-  //           <button className="registerbutton">Register</button>
-  //         </div>
-  //       </form>
-  //     </div>
-  //   </>
-
-  // <>
-  //   <div className="body">
-  //     <div style={{ marginBottom: "50px" }}>
-  //       <h3>Signup</h3>
-  //     </div>
-  //     <AuthForm
-  //       submitTitle="signup"
-  //       submit={signup}
-  //       isInput={true}
-  //       Tag="input"
-  //       ButtonTag="button"
-  //     />
-  //   </div>
-  // </>
   return (
     <>
       <div className="signup-container">
         <div className="signup-heading">
           <h2>Sign Up</h2>
         </div>
-        <form className="signup-form" action="#" onSubmit={handleSubmitSignup}>
+        <div className="signup-form">
           <input
             type="email"
             name="email"
@@ -196,14 +137,16 @@ const Signup = () => {
             onChange={handleInputCredentialsChange}
             required
           />
-          <form onSubmit={handleSubmitImage}>
-            <input type="file" onChange={handleFileSelect} />
-            <button className="uploadpicture" type="submit">
-              Upload A Picture
-            </button>
-          </form>
-          <input type="submit" value="Sign Up" />
-        </form>
+          <input type="file" onChange={handleFileSelect} />
+          <button
+            onClick={handleSubmitImage}
+            className="uploadpicture"
+            type="submit"
+          >
+            Upload A Picture
+          </button>
+          <input onClick={handleSubmitSignup} type="submit" value="Sign Up" />
+        </div>
         <div className="login-link">
           <p>
             Already have an account?{" "}

@@ -5,12 +5,13 @@ body {
   align-items: center;
   height: 100vh;
   width: 100vw;
-  font-family: "Roboto", sans-serif;
-  background: rgb(196, 157, 179);
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  background: rgb(164, 148, 164);
   background: radial-gradient(
     circle,
-    rgb(87, 121, 162) 0%,
-    rgb(220, 124, 201) 100%
+    rgb(209, 210, 211) 0%,
+    rgb(157, 141, 157) 100%
   );
 }
 
@@ -49,7 +50,7 @@ body {
 
 .login-form input[type="submit"] {
   width: 100%;
-  background-color: #a84caf;
+  background-color: #000000;
   color: white;
   padding: 15px 20px;
   border: none;
