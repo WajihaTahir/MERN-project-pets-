@@ -2,6 +2,7 @@ import { useState, createContext, PropsWithChildren, useEffect } from "react";
 import { User, LoginResponse } from "../@types/users";
 import baseUrl from "../utils/baseurl";
 import { ResNotOk } from "../@types";
+import getToken from "../utils/getToken";
 
 interface AuthContextType {
   user: User | null;
@@ -154,8 +155,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const checkUserStatus = async () => {
-    const token = localStorage.getItem("token");
-
+    const token = getToken();
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 

@@ -5,6 +5,7 @@ import { UploadFileResponse } from "../../@types/index.ts";
 import baseUrl from "../../utils/baseurl.ts";
 import { User } from "../../@types/users.ts";
 import { AuthContext } from "../../context/AuthContext.tsx";
+import getToken from "../../utils/getToken.ts";
 
 const ProfileUpdate = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const ProfileUpdate = () => {
 
   const handleSubmitProfileUpdate = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${token}`);
       myHeaders.append("Content-Type", "application/json");
@@ -83,42 +84,46 @@ const ProfileUpdate = () => {
 
   return (
     <>
-      <div className="signup-container">
-        <div className="signup-heading">
-          <h2>Update Profile</h2>
+      {user ? (
+        <div className="signup-container">
+          <div className="signup-heading">
+            <h2>Update Profile</h2>
+          </div>
+          <div className="signup-form">
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter Email"
+              value={userCredentials.email}
+              onChange={handleInputCredentialsChange}
+              required
+            />
+            <input
+              type="text"
+              name="username"
+              placeholder="Enter Username"
+              value={userCredentials.username}
+              onChange={handleInputCredentialsChange}
+              required
+            />
+            <input type="file" onChange={handleFileSelect} />
+            <button
+              onClick={handleSubmitImage}
+              className="uploadpicture"
+              type="button"
+            >
+              Upload A Picture
+            </button>
+            <input
+              type="submit"
+              value="Update Profile"
+              onClick={handleSubmitProfileUpdate}
+            />
+          </div>
         </div>
-        <div className="signup-form">
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter Email"
-            value={userCredentials.email}
-            onChange={handleInputCredentialsChange}
-            required
-          />
-          <input
-            type="text"
-            name="username"
-            placeholder="Enter Username"
-            value={userCredentials.username}
-            onChange={handleInputCredentialsChange}
-            required
-          />
-          <input type="file" onChange={handleFileSelect} />
-          <button
-            onClick={handleSubmitImage}
-            className="uploadpicture"
-            type="button"
-          >
-            Upload A Picture
-          </button>
-          <input
-            type="submit"
-            value="Update Profile"
-            onClick={handleSubmitProfileUpdate}
-          />
-        </div>
-      </div>
+      ) : (
+        alert("please login to update your profile.")
+      )}
     </>
   );
 };

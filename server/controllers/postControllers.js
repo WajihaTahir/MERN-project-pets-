@@ -24,6 +24,7 @@ const getPostbyId = async (req, res) => {
   console.log("getPostbyId...");
   // console.log("req :>> ", req._id);
   const { postID } = req.params;
+  // console.log("postIDId", postID);
 
   try {
     const requestedId = await PostModel.find({ _id: req.params._id }).exec();
@@ -77,7 +78,7 @@ const createAPost = async (req, res) => {
 
 const addAComment = async (req, res) => {
   const postId = req.params.id;
-  console.log("postId...", req.body.comment);
+  // console.log("postId...", postId);
   if (!mongoose.Types.ObjectId.isValid(postId)) {
     return res.status(406).json({ error: "invalid id" });
   }
@@ -116,11 +117,6 @@ const deleteAComment = async (req, res) => {
       { returnOriginal: false }
     );
 
-    // console.log("commentId :>> ", commentId);
-    // console.log("_id", _id);
-
-    // console.log(req.body);
-
     if (!post) {
       return res.status(404).json({
         msg: "Comment not found",
@@ -139,4 +135,45 @@ const deleteAComment = async (req, res) => {
   }
 };
 
-export { getAllPosts, getPostbyId, createAPost, addAComment, deleteAComment };
+//TO LIKE A POST
+
+const likeAPost = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    console.log("useriddddd", userId);
+    const postId = req.params.id;
+    console.log("postid", postId);
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      return res.status(406).json({ error: "invalid id" });
+    }
+
+    const post = await PostModel.findOne({
+      _id: postId,
+    });
+    console.log("here...", post);
+    if (post.likes.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "This encounter already in favs" });
+    }
+
+    const updatedLikes = await PostModel.findOneAndUpdate(
+      { _id: postId },
+      { $addToSet: { likes: userId } }, // Use $addToSet to ensure unique values
+      { new: true }
+    );
+    console.log("postlike", updatedLikes);
+    return res.status(200).json({ message: "added to likes" });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+};
+
+export {
+  getAllPosts,
+  getPostbyId,
+  createAPost,
+  addAComment,
+  deleteAComment,
+  likeAPost,
+};

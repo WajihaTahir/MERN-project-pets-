@@ -7,12 +7,7 @@ body {
   width: 100vw;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  background: rgb(164, 148, 164);
-  background: radial-gradient(
-    circle,
-    rgb(209, 210, 211) 0%,
-    rgb(157, 141, 157) 100%
-  );
+  background-color: white;
 }
 
 .login-container {
@@ -21,7 +16,7 @@ body {
   padding: 40px;
   margin: 100px auto;
   border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
 }
 
 .login-heading {

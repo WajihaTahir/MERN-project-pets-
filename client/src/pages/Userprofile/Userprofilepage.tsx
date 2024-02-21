@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { User } from "../../@types/users";
 import baseUrl from "../../utils/baseurl";
 import "./Userprofilepage.css";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../../context/AuthContext";
+import getToken from "../../utils/getToken";
 
 type APIResponse<T> = {
   message: string;
@@ -13,6 +15,7 @@ type APIResponse<T> = {
 };
 
 function Userprofilepage() {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<User>({} as User);
 
@@ -21,7 +24,7 @@ function Userprofilepage() {
   };
 
   const getProfile = async () => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (!token) {
       alert("please login first");
     }
@@ -54,32 +57,34 @@ function Userprofilepage() {
   };
   return (
     <>
-      <div className="userprofile-container ">
-        <button className="getuserprofile" onClick={getProfile}>
-          Click to get your profile
-        </button>
-        {userProfile && (
-          <div>
-            <h5 className="username">
-              <b>Username:</b> {userProfile.username}
-            </h5>
-            <h5 className="useremail">
-              <b>User Email:</b> {userProfile.email}
-            </h5>
-            <h5 className="profilepicturetext">
-              <b>Profile Picture</b>
-            </h5>
-            <img
-              className="userimage"
-              src={userProfile.userpicture}
-              alt={userProfile.username}
-            />
-          </div>
-        )}
-        <button className="updateuserprofile" onClick={handleUpdateClick}>
-          Update Your profile
-        </button>
-      </div>
+      {user && (
+        <div className="userprofile-container ">
+          <button className="getuserprofile" onClick={getProfile}>
+            Click to get your profile
+          </button>
+          {userProfile && (
+            <div>
+              <h5 className="username">
+                <b>Username:</b> {userProfile.username}
+              </h5>
+              <h5 className="useremail">
+                <b>User Email:</b> {userProfile.email}
+              </h5>
+              <h5 className="profilepicturetext">
+                <b>Profile Picture</b>
+              </h5>
+              <img
+                className="userimage"
+                src={userProfile.userpicture}
+                alt={userProfile.username}
+              />
+            </div>
+          )}
+          <button className="updateuserprofile" onClick={handleUpdateClick}>
+            Update Your profile
+          </button>
+        </div>
+      )}
     </>
   );
 }
