@@ -3,6 +3,8 @@ import { v2 as cloudinary } from "cloudinary";
 import UserModel from "../models/userModel.js";
 import mongoose from "mongoose";
 
+//TO GET ALL POSTS
+
 const getAllPosts = async (req, res) => {
   try {
     const allPosts = await PostModel.find({}).populate("ownedbyuser");
@@ -19,7 +21,8 @@ const getAllPosts = async (req, res) => {
   }
 };
 
-//get one post by id
+//TO GET ONE POST
+
 const getPostbyId = async (req, res) => {
   console.log("getPostbyId...");
   // console.log("req :>> ", req._id);
@@ -39,7 +42,8 @@ const getPostbyId = async (req, res) => {
   }
 };
 
-//create a new post
+//TO CREATE A NEW POST
+
 const createAPost = async (req, res) => {
   console.log("createAPost...", req.file);
   try {
@@ -76,6 +80,8 @@ const createAPost = async (req, res) => {
   }
 };
 
+//TO ADD A COMMENT
+
 const addAComment = async (req, res) => {
   const postId = req.params.id;
   // console.log("postId...", postId);
@@ -106,6 +112,8 @@ const addAComment = async (req, res) => {
     return res.status(500).json({ error: error });
   }
 };
+
+//TO DELETE A COMMENT
 
 const deleteAComment = async (req, res) => {
   try {
@@ -140,9 +148,9 @@ const deleteAComment = async (req, res) => {
 const likeAPost = async (req, res) => {
   try {
     const userId = req.user._id;
-    console.log("useriddddd", userId);
+    // console.log("useriddddd", userId);
     const postId = req.params.id;
-    console.log("postid", postId);
+    // console.log("postid", postId);
     if (!mongoose.Types.ObjectId.isValid(postId)) {
       return res.status(406).json({ error: "invalid id" });
     }
@@ -150,11 +158,9 @@ const likeAPost = async (req, res) => {
     const post = await PostModel.findOne({
       _id: postId,
     });
-    console.log("here...", post);
+    // console.log("here...", post);
     if (post.likes.includes(userId)) {
-      return res
-        .status(400)
-        .json({ message: "This encounter already in favs" });
+      return res.status(400).json({ message: "This is already in likes" });
     }
 
     const updatedLikes = await PostModel.findOneAndUpdate(
@@ -169,6 +175,20 @@ const likeAPost = async (req, res) => {
   }
 };
 
+//TO UNLIKE A POST
+
+const unlikeAPost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    // console.log("unlikepost", postId);
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      return res.status(406).json({ error: "invalid id" });
+    }
+
+    console.log("here...");
+  } catch (error) {}
+};
+
 export {
   getAllPosts,
   getPostbyId,
@@ -176,4 +196,5 @@ export {
   addAComment,
   deleteAComment,
   likeAPost,
+  unlikeAPost,
 };

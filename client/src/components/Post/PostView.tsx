@@ -31,6 +31,7 @@ function PostView({ post }: Props) {
 
   const navigate = useNavigate();
 
+  //like button
   const handleLikeButton = async (post: Post) => {
     if (!poster) {
       try {
@@ -43,13 +44,14 @@ function PostView({ post }: Props) {
       }
     }
   };
-
+  //for instant change on comments
   useEffect(() => {
     if (post.comments) {
       setComments([...post.comments]);
     }
   }, [post.comments]);
 
+  //for instant change on likes without refreshing the page
   useEffect(() => {
     if (post.likes) {
       setLikes([...post.likes]);
@@ -58,6 +60,7 @@ function PostView({ post }: Props) {
 
   console.log("post", post);
 
+  //delete a comment
   const handleDeleteComment = async (postId: string, commentId: string) => {
     console.log("commentId", postId);
     setIsCommentDelete(false);
@@ -104,6 +107,7 @@ function PostView({ post }: Props) {
     }
   };
 
+  //addding a comment
   const onSubmit = async () => {
     const token = getToken();
     console.log("token", token);
@@ -139,6 +143,8 @@ function PostView({ post }: Props) {
       alert("Couldn't create comment");
     }
   };
+
+  //show more comments
 
   const handleShowMoreComments = () => {
     setShowAllComments(true);
@@ -200,8 +206,8 @@ function PostView({ post }: Props) {
               <div>
                 {showAllComments
                   ? comments.map((comment, index: number) => (
-                      <div key={index}>
-                        <div className="commentornameimage">
+                      <div key={index} className="allcomments">
+                        <div className="commentContainer">
                           <img
                             style={{
                               width: "40px",
@@ -213,6 +219,24 @@ function PostView({ post }: Props) {
                           />
                           {comment.commentorName}: {comment.comment}
                         </div>
+                        {(post.ownedbyuser?._id === user._id ||
+                          comment.commentorName === user.username) && (
+                          <div className="trashcan">
+                            <FontAwesomeIcon
+                              style={{
+                                fontSize: "large",
+                                textAlign: "end",
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                              className="thumbsupicon"
+                              onClick={() => {
+                                handleDeleteComment(post._id, comment._id);
+                              }}
+                              icon={faTrashCan}
+                            />
+                          </div>
+                        )}
                       </div>
                     ))
                   : comments.slice(0, 2).map((comment, index: number) => (

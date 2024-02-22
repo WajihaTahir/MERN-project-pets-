@@ -21,7 +21,7 @@ const likePost = async ({ post }: Props) => {
     console.log("request ops", requestOptions);
     try {
       const response = await fetch(
-        `${baseUrl}/api/posts/likecomment/${post._id}`,
+        `${baseUrl}/api/posts/likepost/${post._id}`,
         requestOptions
       );
       const result = await response.json();
