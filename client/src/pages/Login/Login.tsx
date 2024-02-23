@@ -28,7 +28,7 @@ const Login = () => {
     navigate("/signup"); // Navigate to the signup page
   };
   if (user) {
-    return <Navigate to="/posts" />;
+    return <Navigate to="/" />;
   }
 
   const handleSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {

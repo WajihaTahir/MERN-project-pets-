@@ -80,6 +80,59 @@ const createAPost = async (req, res) => {
   }
 };
 
+//TO UPDATE A POST
+
+const updatePost = async (req, res) => {
+  console.log("updatePost...", req.file);
+  try {
+    let updatedFields = {};
+    if (req.body.caption) {
+      updatedFields.caption = req.body.caption;
+    }
+
+    if (req.file) {
+      const pictureUpload = await cloudinary.uploader.upload(req.file.path, {
+        folder: "posts",
+        transformation: [{ width: 800, height: 700, crop: "fill" }],
+      });
+      updatedFields.image = pictureUpload.secure_url;
+    }
+    const postId = req.params.postId; // Assuming postId is passed in the request params
+    const post = await PostModel.findByIdAndUpdate(
+      postId,
+      { $set: updatedFields },
+      { new: true }
+    );
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    return res.status(200).json({ post });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//TO DELETE A POST
+
+const deletePost = async (req, res) => {
+  const postId = req.params.id;
+  // console.log("postiddelete", postId);
+  try {
+    const postToDelete = await PostModel.findOneAndDelete({ _id: postId });
+    console.log("post to delete", postToDelete);
+    if (!postToDelete) {
+      return res.status(404).json({ message: "no post found with that id" });
+    }
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    res.status(500).json({
+      message: "something went wrong in deleting a post",
+      error: error,
+    });
+  }
+};
+
 //TO ADD A COMMENT
 
 const addAComment = async (req, res) => {
@@ -118,7 +171,7 @@ const addAComment = async (req, res) => {
 const deleteAComment = async (req, res) => {
   try {
     const { commentId, postId } = req.body;
-    console.log("id..", commentId);
+    // console.log("id..", commentId);
     const post = await PostModel.findByIdAndUpdate(
       postId,
       { $pull: { comments: { _id: commentId } } },
@@ -160,7 +213,7 @@ const likeAPost = async (req, res) => {
     });
     // console.log("here...", post);
     if (post.likes.includes(userId)) {
-      return res.status(400).json({ message: "This is already in likes" });
+      return res.status(400).json({ message: "This is not in likes" });
     }
 
     const updatedLikes = await PostModel.findOneAndUpdate(
@@ -168,7 +221,7 @@ const likeAPost = async (req, res) => {
       { $addToSet: { likes: userId } }, // Use $addToSet to ensure unique values
       { new: true }
     );
-    console.log("postlike", updatedLikes);
+    // console.log("here at like", updatedLikes);
     return res.status(200).json({ message: "added to likes" });
   } catch (error) {
     res.status(500).json({ error: error });
@@ -179,14 +232,35 @@ const likeAPost = async (req, res) => {
 
 const unlikeAPost = async (req, res) => {
   try {
+    const userId = req.user._id;
     const postId = req.params.id;
-    // console.log("unlikepost", postId);
+
     if (!mongoose.Types.ObjectId.isValid(postId)) {
       return res.status(406).json({ error: "invalid id" });
     }
 
-    console.log("here...");
-  } catch (error) {}
+    const post = await PostModel.findOne({ _id: postId });
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (!post.likes.includes(userId)) {
+      return res.status(400).json({ message: "This is  in likes" });
+    }
+
+    const updatedPost = await PostModel.findByIdAndUpdate(
+      postId,
+      { $pull: { likes: userId } },
+      { new: true }
+    );
+
+    // console.log("here at unlike", updatedPost);
+    return res.status(200).json({ message: "removed from likes", updatedPost });
+  } catch (error) {
+    // console.error("Error unliking post:", error);
+    res.status(500).json({ error: error.message });
+  }
 };
 
 export {
@@ -197,4 +271,6 @@ export {
   deleteAComment,
   likeAPost,
   unlikeAPost,
+  updatePost,
+  deletePost,
 };

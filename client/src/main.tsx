@@ -12,6 +12,7 @@ import Allposts from "./pages/Allposts/Allposts.tsx";
 import Footer from "./components/Footer/Footer.tsx";
 import Userprofilepage from "./pages/Userprofile/Userprofilepage.tsx";
 import CreateNewPost from "./pages/CreateNewPost/CreateNewPost.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,11 @@ const router = createBrowserRouter([
 
       {
         path: "/posts",
+        // element: (
+        //   <ProtectedRoute>
+        //     <Allposts />
+        //   </ProtectedRoute>
+        // ),
         element: <Allposts />,
       },
     ],

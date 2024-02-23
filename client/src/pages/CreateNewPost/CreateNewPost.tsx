@@ -1,8 +1,10 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import baseUrl from "../../utils/baseurl.ts";
 import "./CreateNewPost.css";
 import { AuthContext } from "../../context/AuthContext.tsx";
 import getToken from "../../utils/getToken.ts";
+import Spinner from "../../components/Spinner/Spinner.tsx";
+
 const CreateNewPost = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<File | string>("");
@@ -63,7 +65,15 @@ const CreateNewPost = () => {
             </h2>
             <div className="post-form">
               <div className="form-group">
-                {loading && <p>Loading...</p>}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {loading && <Spinner />}
+                </div>
                 <textarea
                   id="caption"
                   value={caption}
@@ -79,7 +89,11 @@ const CreateNewPost = () => {
                 ></textarea>
 
                 {imageToShow && (
-                  <img src={imageToShow} width="300px" height="250px" />
+                  <img
+                    src={imageToShow as string}
+                    width="300px"
+                    height="250px"
+                  />
                 )}
                 <input type="file" onChange={handleFileSelect} />
               </div>

@@ -1,17 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import {
   faThumbsUp,
   faPaperPlane,
   faTrashCan,
+  faPenToSquare,
 } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as faSolid } from "@fortawesome/free-solid-svg-icons";
 import { Post, Comment } from "../../@types/posts";
 import baseUrl from "../../utils/baseurl";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 import getToken from "../../utils/getToken.ts";
-import likePost from "../../utils/favorites.ts";
+import { likePost, unlikePost } from "../../utils/likes.ts";
+import deletePost from "../DeletePost.tsx";
 
 type Props = {
   post: Post;
@@ -23,27 +26,40 @@ function PostView({ post }: Props) {
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [showAllComments, setShowAllComments] = useState(false);
-  const [, setIsCommentDelete] = useState(false);
-  const [, setUpdatedComments] = useState();
-  const [, setIsCommentDeleteFail] = useState(false);
-  const [poster, setPoster] = useState(false);
+  const [isCommentDelete, setIsCommentDelete] = useState(false);
+  const [updatedComments, setUpdatedComments] = useState();
+  const [isCommentDeleteFail, setIsCommentDeleteFail] = useState(false);
   const [likes, setLikes] = useState<string[]>([]);
-
   const navigate = useNavigate();
+
+  const alreadyLiked = useMemo(
+    () => likes.includes(user?._id ?? ""),
+    [likes, user]
+  );
 
   //like button
   const handleLikeButton = async (post: Post) => {
-    if (!poster) {
+    if (!alreadyLiked) {
       try {
         await likePost({ post });
         if (user?._id) {
           setLikes([...likes, user?._id]);
         }
       } catch (error) {
-        alert("problem liking a comment");
+        alert("problem liking a post");
+      }
+    } else {
+      try {
+        await unlikePost({ post });
+        if (user?._id) {
+          setLikes(likes.filter((item) => item !== user._id));
+        }
+      } catch (error) {
+        alert("problem unliking a post");
       }
     }
   };
+
   //for instant change on comments
   useEffect(() => {
     if (post.comments) {
@@ -57,8 +73,6 @@ function PostView({ post }: Props) {
       setLikes([...post.likes]);
     }
   }, [post.likes]);
-
-  console.log("post", post);
 
   //delete a comment
   const handleDeleteComment = async (postId: string, commentId: string) => {
@@ -174,6 +188,24 @@ function PostView({ post }: Props) {
                 {""}
                 Posted On: {moment(post.time).format("MMMM Do YYYY, h:mm:ss a")}
               </p>
+              {post.ownedbyuser?._id === user._id && (
+                <div className="deleteeditpost">
+                  <FontAwesomeIcon
+                    icon={faPenToSquare}
+                    style={{ cursor: "pointer", marginRight: "20px" }}
+                  />
+
+                  <FontAwesomeIcon
+                    style={{
+                      fontSize: "large",
+                      color: "white",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => deletePost({ post })}
+                    icon={faTrashCan}
+                  />
+                </div>
+              )}
             </div>
             <div className="caption">
               <p style={{ marginBottom: "10px" }}>{post.caption}</p>
@@ -181,18 +213,20 @@ function PostView({ post }: Props) {
             <img className="postimage" src={post.image} alt="Post" />
 
             <div className="likecomment">
-              <div style={{ display: "flex", marginRight: "100px" }}>
-                <FontAwesomeIcon
-                  onClick={() => {
-                    handleLikeButton(post);
-                  }}
-                  color={likes.includes(user._id) ? "blue" : "black"}
-                  className="thumbsupicon"
-                  icon={faThumbsUp}
-                  style={{ marginRight: "5px", cursor: "pointer" }}
-                />
-                {likes.length > 0 && <p>{likes?.length}</p>}
-              </div>
+              <>
+                <div style={{ display: "flex", marginRight: "100px" }}>
+                  <FontAwesomeIcon
+                    onClick={() => {
+                      handleLikeButton(post);
+                    }}
+                    color={alreadyLiked ? "blue" : "black"}
+                    className="thumbsupicon"
+                    icon={alreadyLiked ? faSolid : faThumbsUp}
+                    style={{ marginRight: "5px", cursor: "pointer" }}
+                  />
+                  {likes.length > 0 && <p>{likes?.length}</p>}
+                </div>
+              </>
               <p
                 style={{ cursor: "pointer", marginRight: "100px" }}
                 onClick={() => setIsCommenting(true)}
@@ -284,7 +318,6 @@ function PostView({ post }: Props) {
                 )}
               </div>
             )}
-
             {isCommenting && (
               <div
                 style={{

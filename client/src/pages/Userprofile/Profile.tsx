@@ -6,12 +6,14 @@ import baseUrl from "../../utils/baseurl.ts";
 import { User } from "../../@types/users.ts";
 import { AuthContext } from "../../context/AuthContext.tsx";
 import getToken from "../../utils/getToken.ts";
+import Spinner from "../../components/Spinner/Spinner.tsx";
 
 const ProfileUpdate = () => {
   const navigate = useNavigate();
   const { user, updateUser } = useContext(AuthContext);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
   const [userCredentials, setUserCredentials] = useState({
     email: user?.email ?? "",
     username: user?.username ?? "",
@@ -28,11 +30,11 @@ const ProfileUpdate = () => {
 
   const handleSubmitImage = async () => {
     if (!selectedFile) return;
-
     const formdata = new FormData();
     formdata.append("userpicture", selectedFile);
 
     try {
+      setLoading(true);
       const response = await fetch(`${baseUrl}/api/users/pictureUpload/`, {
         method: "POST",
         body: formdata,
@@ -44,14 +46,17 @@ const ProfileUpdate = () => {
           userpicture: result.data.imageUrl,
         });
       }
+      setLoading(false);
     } catch (error) {
       console.log("error uploading image", error);
       alert("Couldn't upload image");
+      setLoading(false);
     }
   };
 
   const handleSubmitProfileUpdate = async () => {
     try {
+      setLoading(true);
       const token = getToken();
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${token}`);
@@ -69,9 +74,11 @@ const ProfileUpdate = () => {
         updateUser(result); // Update user context with the updated user data
         navigate("/userprofile"); // Redirect to the profile page
       }
+      setLoading(false);
     } catch (error) {
       console.log("error updating profile", error);
       alert("Couldn't update profile");
+      setLoading(false);
     }
   };
 
@@ -107,17 +114,30 @@ const ProfileUpdate = () => {
               required
             />
             <input type="file" onChange={handleFileSelect} />
-            <button
-              onClick={handleSubmitImage}
-              className="uploadpicture"
-              type="button"
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              Upload A Picture
-            </button>
+              <button
+                onClick={handleSubmitImage}
+                className="uploadpicture"
+                type="button"
+                disabled={loading}
+                style={{ marginRight: "10px" }}
+              >
+                Upload A Picture
+              </button>
+              {loading && <Spinner />}
+            </div>
             <input
               type="submit"
               value="Update Profile"
               onClick={handleSubmitProfileUpdate}
+              disabled={loading}
             />
           </div>
         </div>

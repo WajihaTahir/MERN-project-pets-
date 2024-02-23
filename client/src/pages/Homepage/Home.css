@@ -5,12 +5,16 @@
 }
 
 .homebody {
-  background-image: url("../../assets/diffpets.jpg");
-  background-size: cover;
+  background-image: url("../../assets/20240223_095806.png");
+
+  background-size: 1000px 800px;
+  background-repeat: no-repeat;
+  background-position: center;
   height: 100vh;
   width: 100vw;
   color: rgb(0, 0, 0);
   font-family: fantasy;
+  margin-top: 50px;
 }
 
 .homeheading {
@@ -23,12 +27,26 @@
 
 @media only screen and (max-width: 600px) and (orientation: landscape) {
   .homebody {
-    background-image: url("../src/assets/diffpets.jpg");
-    object-fit: cover;
+    background-image: url("../../assets/20240223_095806.png");
     padding: none;
     height: 70%;
     width: 70%;
     color: black;
     font-family: fantasy;
   }
+}
+
+@keyframes textAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.text-animation {
+  animation: textAnimation 1s ease-in-out forwards;
 }

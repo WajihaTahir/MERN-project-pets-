@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { User } from "../../@types/users";
 import baseUrl from "../../utils/baseurl";
 import "./Userprofilepage.css";
@@ -55,13 +55,15 @@ function Userprofilepage() {
       }
     }
   };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   return (
     <>
       {user && (
         <div className="userprofile-container ">
-          <button className="getuserprofile" onClick={getProfile}>
-            Click to get your profile
-          </button>
           {userProfile && (
             <div>
               <h5 className="username">
