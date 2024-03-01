@@ -3,7 +3,6 @@ import baseUrl from "../../utils/baseurl";
 import { Post } from "../../@types/posts";
 import PostView from "../../components/Post/PostView.tsx";
 import "./Allposts.css";
-import { useNavigate } from "react-router";
 import deletePost from "../../components/DeletePost/DeletePost.tsx";
 import { AuthContext } from "../../context/AuthContext.tsx";
 import CreatePostModal from "../../components/CreatePostModal/CreatePostModal.tsx";

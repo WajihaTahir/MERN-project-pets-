@@ -194,7 +194,6 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
                     type="submit"
                     style={{
                       cursor: "pointer",
-
                       backgroundColor: "black",
                       color: "white",
                       padding: "10px 50px",
