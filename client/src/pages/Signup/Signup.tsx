@@ -13,12 +13,12 @@ type RegisterResponse = {
     user: User;
   };
 };
-
 const Signup = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); //created signup function here
 
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
+  const [profilePicture, setProfilePicture] = useState<string>("");
   const { login } = useContext(AuthContext);
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +60,7 @@ const Signup = () => {
           ...(userCredentials as User),
           userpicture: result.data.imageUrl,
         });
+        setProfilePicture(result.data.imageUrl);
       }
       if (!response.ok) {
         alert("couldn't get response for uploading an image.");
@@ -137,6 +138,9 @@ const Signup = () => {
             onChange={handleInputCredentialsChange}
             required
           />
+          <p style={{ fontSize: "12px", marginBottom: "10px" }}>
+            Please enter password of characters length from 2 to 10
+          </p>
           <input type="file" onChange={handleFileSelect} />
           <button
             onClick={handleSubmitImage}
@@ -145,6 +149,27 @@ const Signup = () => {
           >
             Upload A Picture
           </button>
+          <div style={{ marginTop: "20px" }}>
+            {profilePicture ? (
+              <img
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  borderRadius: "50%",
+                }}
+                src={profilePicture}
+                alt="Profile"
+                className="profile-picture"
+              />
+            ) : (
+              <img
+                style={{ width: "100px", height: "100px", borderRadius: "50%" }}
+                src="https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg"
+                alt="Empty Profile"
+                className="profile-picture"
+              />
+            )}
+          </div>
           <input onClick={handleSubmitSignup} type="submit" value="Sign Up" />
         </div>
         <div className="login-link">

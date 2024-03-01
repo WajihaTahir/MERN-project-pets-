@@ -14,24 +14,31 @@ import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 import getToken from "../../utils/getToken.ts";
 import { likePost, unlikePost } from "../../utils/likes.ts";
-import deletePost from "../DeletePost.tsx";
 
 type Props = {
   post: Post;
+  onDelete: (post: Post) => void;
 };
 
-function PostView({ post }: Props) {
+function PostView({ post, onDelete }: Props) {
   const { user } = useContext(AuthContext);
   const [isCommenting, setIsCommenting] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [showAllComments, setShowAllComments] = useState(false);
-  const [isCommentDelete, setIsCommentDelete] = useState(false);
-  const [updatedComments, setUpdatedComments] = useState();
-  const [isCommentDeleteFail, setIsCommentDeleteFail] = useState(false);
+  const [, setUpdatedComments] = useState();
   const [likes, setLikes] = useState<string[]>([]);
   const navigate = useNavigate();
-
+  const handleUpdateClick = () => {
+    navigate("/updatepost", {
+      state: {
+        image: post.image,
+        caption: post.caption,
+        editing: true,
+        id: post._id,
+      },
+    });
+  };
   const alreadyLiked = useMemo(
     () => likes.includes(user?._id ?? ""),
     [likes, user]
@@ -63,6 +70,7 @@ function PostView({ post }: Props) {
   //for instant change on comments
   useEffect(() => {
     if (post.comments) {
+      console.log("postcomms", post.comments);
       setComments([...post.comments]);
     }
   }, [post.comments]);
@@ -77,7 +85,6 @@ function PostView({ post }: Props) {
   //delete a comment
   const handleDeleteComment = async (postId: string, commentId: string) => {
     console.log("commentId", postId);
-    setIsCommentDelete(false);
     try {
       const token = getToken();
       const myHeaders = new Headers();
@@ -107,17 +114,14 @@ function PostView({ post }: Props) {
         .then((response) => response.json())
         .then((result) => {
           // console.log("result :>> ", result);
-          setIsCommentDelete(true);
           setUpdatedComments(result.post.comments);
           setComments(comments.filter((item) => item._id !== commentId));
         })
         .catch((error) => console.log("error", error));
-      setIsCommentDeleteFail(true);
-
       // console.log("comment", comment._id);
     } catch (error) {
-      // console.log("error", error);
-      setIsCommentDeleteFail(true);
+      console.log("error", error);
+      // setIsCommentDeleteFail(true);
     }
   };
 
@@ -143,13 +147,12 @@ function PostView({ post }: Props) {
       const resJson = await response.json();
       const tempComment: Comment = {
         comment: newComment,
-        commentorId: user?._id ?? "",
-        commentorName: user?.username ?? "",
-        commentorPicture: user?.userpicture ?? "",
+        commentor: user,
         time: new Date(),
         _id: resJson.newCommentId,
       };
-      console.log("tempcomment", tempComment);
+      // console.log("comment id", tempComment.commentorId);
+      // console.log("user id", user?._id);
       setComments([...comments, tempComment]);
       setNewComment("");
     } catch (error) {
@@ -166,189 +169,152 @@ function PostView({ post }: Props) {
 
   return (
     <>
-      {user ? (
-        <div key={post._id} className="flexingpost">
-          <div className="wholepost">
-            <div className="usernamepicture">
-              <img
-                style={{
-                  width: "70px",
-                  height: "70px",
-                  marginTop: "10px",
-                  marginRight: "10px",
-                  borderRadius: "50%",
-                }}
-                src={post.ownedbyuser?.userpicture}
-              ></img>
-              <p style={{ marginRight: "10px", marginTop: "40px" }}>
-                {post.ownedbyuser?.username},
-              </p>
+      <div key={post._id} className="flexingpost">
+        <div className="wholepost">
+          <div className="usernamepicture">
+            <img
+              className="userpicturepost"
+              src={post.ownedbyuser?.userpicture}
+            ></img>
+            <p style={{ marginRight: "10px", marginTop: "40px" }}>
+              {post.ownedbyuser?.username},
+            </p>
 
-              <p style={{ marginTop: "40px" }}>
-                {""}
-                Posted On: {moment(post.time).format("MMMM Do YYYY, h:mm:ss a")}
-              </p>
-              {post.ownedbyuser?._id === user._id && (
-                <div className="deleteeditpost">
-                  <FontAwesomeIcon
-                    icon={faPenToSquare}
-                    style={{ cursor: "pointer", marginRight: "20px" }}
-                  />
-
-                  <FontAwesomeIcon
-                    style={{
-                      fontSize: "large",
-                      color: "white",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => deletePost({ post })}
-                    icon={faTrashCan}
-                  />
-                </div>
-              )}
-            </div>
-            <div className="caption">
-              <p style={{ marginBottom: "10px" }}>{post.caption}</p>
-            </div>
-            <img className="postimage" src={post.image} alt="Post" />
-
-            <div className="likecomment">
-              <>
-                <div style={{ display: "flex", marginRight: "100px" }}>
-                  <FontAwesomeIcon
-                    onClick={() => {
-                      handleLikeButton(post);
-                    }}
-                    color={alreadyLiked ? "blue" : "black"}
-                    className="thumbsupicon"
-                    icon={alreadyLiked ? faSolid : faThumbsUp}
-                    style={{ marginRight: "5px", cursor: "pointer" }}
-                  />
-                  {likes.length > 0 && <p>{likes?.length}</p>}
-                </div>
-              </>
-              <p
-                style={{ cursor: "pointer", marginRight: "100px" }}
-                onClick={() => setIsCommenting(true)}
-              >
-                Comment
-              </p>
-              <p>({comments.length} comments)</p>
-            </div>
-
-            {comments && comments.length > 0 && (
-              <div>
-                {showAllComments
-                  ? comments.map((comment, index: number) => (
-                      <div key={index} className="allcomments">
-                        <div className="commentContainer">
-                          <img
-                            style={{
-                              width: "40px",
-                              height: "40px",
-                              borderRadius: "50%",
-                            }}
-                            src={comment.commentorPicture}
-                            alt="Commentor"
-                          />
-                          {comment.commentorName}: {comment.comment}
-                        </div>
-                        {(post.ownedbyuser?._id === user._id ||
-                          comment.commentorName === user.username) && (
-                          <div className="trashcan">
-                            <FontAwesomeIcon
-                              style={{
-                                fontSize: "large",
-                                textAlign: "end",
-                                color: "red",
-                                cursor: "pointer",
-                              }}
-                              className="thumbsupicon"
-                              onClick={() => {
-                                handleDeleteComment(post._id, comment._id);
-                              }}
-                              icon={faTrashCan}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    ))
-                  : comments.slice(0, 2).map((comment, index: number) => (
-                      <div className="allcomments" key={index}>
-                        <div className="commentContainer">
-                          <img
-                            style={{
-                              width: "40px",
-                              height: "40px",
-                              borderRadius: "50%",
-                            }}
-                            src={comment.commentorPicture}
-                            alt="Commentor"
-                          />
-                          {comment.commentorName}: {comment.comment}
-                        </div>
-                        {(post.ownedbyuser?._id === user._id ||
-                          comment.commentorName === user.username) && (
-                          <div className="trashcan">
-                            <FontAwesomeIcon
-                              style={{
-                                fontSize: "large",
-                                textAlign: "end",
-                                color: "red",
-                                cursor: "pointer",
-                              }}
-                              className="thumbsupicon"
-                              onClick={() => {
-                                handleDeleteComment(post._id, comment._id);
-                              }}
-                              icon={faTrashCan}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-
-                {!showAllComments && comments.length > 2 && (
-                  <button
-                    className="showmorecomments"
-                    onClick={handleShowMoreComments}
-                  >
-                    Show more comments
-                  </button>
-                )}
-              </div>
-            )}
-            {isCommenting && (
-              <div
-                style={{
-                  width: "700px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <input
-                  value={newComment}
-                  onChange={(e) => {
-                    setNewComment(e.target.value);
-                  }}
-                  placeholder="what do you say about this post?"
-                  type="text"
-                  style={{
-                    width: "90%",
-                    borderRadius: "10px",
-                    fontSize: "16px",
-                  }}
+            <p style={{ marginTop: "40px" }}>
+              {""}
+              Posted On: {moment(post.time).format("MMMM Do YYYY, h:mm:ss a")}
+            </p>
+            {post.ownedbyuser?._id === user?._id && (
+              <div className="deleteeditpost">
+                <FontAwesomeIcon
+                  className="editpost"
+                  icon={faPenToSquare}
+                  onClick={handleUpdateClick}
                 />
-                <button className="postcomment" onClick={onSubmit}>
-                  <FontAwesomeIcon icon={faPaperPlane} />
-                </button>
+                <FontAwesomeIcon
+                  className="deletepost"
+                  onClick={() => onDelete(post)}
+                  icon={faTrashCan}
+                />
               </div>
             )}
           </div>
+          <div className="caption">
+            <p style={{ marginBottom: "10px" }}>{post.caption}</p>
+          </div>
+          <img className="postimage" src={post.image} alt="Post" />
+
+          <div className="likecomment">
+            <>
+              <div style={{ display: "flex", marginRight: "100px" }}>
+                <FontAwesomeIcon
+                  onClick={() => {
+                    handleLikeButton(post);
+                  }}
+                  color={alreadyLiked ? "blue" : "black"}
+                  className="thumbsupicon"
+                  icon={alreadyLiked ? faSolid : faThumbsUp}
+                />
+                {likes.length > 0 && <p>{likes?.length}</p>}
+              </div>
+            </>
+            <p
+              style={{ cursor: "pointer", marginRight: "100px" }}
+              onClick={() => setIsCommenting(true)}
+            >
+              Comment
+            </p>
+            <p>({comments.length} comments)</p>
+          </div>
+
+          {comments && comments.length > 0 && (
+            <div>
+              {showAllComments
+                ? comments.map((comment, index: number) => {
+                    return (
+                      <div key={index} className="allcomments">
+                        <div className="commentContainer">
+                          <img
+                            className="commentUserPicture"
+                            src={comment.commentor?.userpicture}
+                            alt="Commentor"
+                          />
+                          {comment.commentor?.username}: {comment.comment}
+                        </div>
+                        {(post.ownedbyuser?._id === user?._id ||
+                          comment.commentor?._id === user?._id) && (
+                          <div className="trashcan">
+                            <FontAwesomeIcon
+                              className="trashcomment"
+                              onClick={() => {
+                                handleDeleteComment(post._id, comment._id);
+                              }}
+                              icon={faTrashCan}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                : comments.slice(0, 2).map((comment, index: number) => (
+                    <div className="allcomments" key={index}>
+                      <div className="commentContainer">
+                        <img
+                          className="commentUserPicture"
+                          src={comment.commentor?.userpicture}
+                          alt="Commentor"
+                        />
+                        {comment.commentor?.username}: {comment.comment}
+                      </div>
+                      {(post.ownedbyuser?._id === user?._id ||
+                        comment.commentor?._id === user?._id) && (
+                        <div className="trashcan">
+                          <FontAwesomeIcon
+                            className="trashcomment"
+                            onClick={() => {
+                              handleDeleteComment(post._id, comment._id);
+                            }}
+                            icon={faTrashCan}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+              {!showAllComments && comments.length > 2 && (
+                <button
+                  className="showmorecomments"
+                  onClick={handleShowMoreComments}
+                >
+                  Show more comments
+                </button>
+              )}
+            </div>
+          )}
+          {isCommenting && (
+            <div
+              style={{
+                width: "700px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <input
+                value={newComment}
+                onChange={(e) => {
+                  setNewComment(e.target.value);
+                }}
+                placeholder="what do you say about this post?"
+                className="whatdoyousay"
+                type="text"
+              />
+              <button className="postcomment" onClick={onSubmit}>
+                <FontAwesomeIcon icon={faPaperPlane} />
+              </button>
+            </div>
+          )}
         </div>
-      ) : (
-        navigate("/")
-      )}
+      </div>
     </>
   );
 }

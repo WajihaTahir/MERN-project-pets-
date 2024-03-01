@@ -30,6 +30,14 @@ h6 {
   background-color: lightpink;
 }
 
+.addpost {
+  padding: 20px;
+  border-radius: 20px;
+  width: 610px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
 .usernamepicture {
   width: 700px;
   display: flex;
@@ -75,6 +83,8 @@ h6 {
 }
 .thumbsupicon {
   text-align: left;
+  margin-right: 5px;
+  cursor: pointer;
 }
 
 .postcomment {
@@ -102,6 +112,11 @@ h6 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.commentUserPicture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 
 .commentornameimage {
@@ -135,6 +150,13 @@ h6 {
   margin-right: 20px;
 }
 
+.trashcomment {
+  font-size: large;
+  text-align: end;
+  color: red;
+  cursor: pointer;
+}
+
 .deleteeditpost {
   display: flex;
   flex-direction: row;
@@ -142,4 +164,42 @@ h6 {
   justify-content: flex-end;
   margin-left: 150px;
   font-size: 20px;
+}
+
+.deletepost {
+  font-size: large;
+  color: white;
+  cursor: pointer;
+}
+
+.editpost {
+  cursor: pointer;
+  margin-right: 20px;
+}
+.usertimelinepicturepost {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+  margin-top: 80px;
+}
+.timelineUserPicture {
+  width: 70px;
+  height: 70px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+.userpicturepost {
+  width: 70px;
+  height: 70px;
+  margin-top: 10px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.whatdoyousay {
+  width: 90%;
+  border-radius: 10px;
+  font-size: 16px;
 }

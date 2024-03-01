@@ -1,9 +1,10 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import baseUrl from "../../utils/baseurl.ts";
 import "./CreateNewPost.css";
 import { AuthContext } from "../../context/AuthContext.tsx";
 import getToken from "../../utils/getToken.ts";
 import Spinner from "../../components/Spinner/Spinner.tsx";
+import { useLocation } from "react-router";
 
 const CreateNewPost = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -11,6 +12,7 @@ const CreateNewPost = () => {
   const [imageToShow, setImageToShow] = useState<File | string>("");
   const [caption, setCaption] = useState<string>("");
   const { user } = useContext(AuthContext);
+  const { state } = useLocation();
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -27,8 +29,21 @@ const CreateNewPost = () => {
     }
   };
 
+  useEffect(() => {
+    if (state?.image) {
+      setImageToShow(state?.image);
+    }
+    if (state?.caption) {
+      setCaption(state?.caption);
+    }
+  }, [state]);
+
   const onSubmit = async () => {
     setLoading(true);
+
+    const callUrl = state?.editing
+      ? `api/posts/updatePost/${state?.id}/`
+      : "api/posts/postnewpost/";
 
     const token = getToken();
     const myHeaders = new Headers();
@@ -37,15 +52,12 @@ const CreateNewPost = () => {
     formdata.append("image", image);
     formdata.append("caption", caption);
     const requestOptions = {
-      method: "POST",
+      method: state?.editing ? "PUT" : "POST",
       headers: myHeaders,
       body: formdata,
     };
     try {
-      const response = await fetch(
-        `${baseUrl}/api/posts/postnewpost/`,
-        requestOptions
-      );
+      const response = await fetch(`${baseUrl}/${callUrl}`, requestOptions);
       if (response.ok) {
         setLoading(false);
       }
@@ -91,8 +103,8 @@ const CreateNewPost = () => {
                 {imageToShow && (
                   <img
                     src={imageToShow as string}
-                    width="300px"
-                    height="250px"
+                    width="400px"
+                    height="350px"
                   />
                 )}
                 <input type="file" onChange={handleFileSelect} />

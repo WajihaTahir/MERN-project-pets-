@@ -7,7 +7,15 @@ import mongoose from "mongoose";
 
 const getAllPosts = async (req, res) => {
   try {
-    const allPosts = await PostModel.find({}).populate("ownedbyuser");
+    const allPosts = await PostModel.find({})
+      .populate("ownedbyuser")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "commentor",
+          model: "user",
+        },
+      });
     console.log("allPosts", allPosts);
     res.status(201).json({
       number: allPosts.length,
@@ -97,7 +105,8 @@ const updatePost = async (req, res) => {
       });
       updatedFields.image = pictureUpload.secure_url;
     }
-    const postId = req.params.postId; // Assuming postId is passed in the request params
+    const postId = req.params._id; // Assuming postId is passed in the request params
+    console.log("postId", postId);
     const post = await PostModel.findByIdAndUpdate(
       postId,
       { $set: updatedFields },
@@ -137,6 +146,7 @@ const deletePost = async (req, res) => {
 
 const addAComment = async (req, res) => {
   const postId = req.params.id;
+  const userId = req.user._id;
   // console.log("postId...", postId);
   if (!mongoose.Types.ObjectId.isValid(postId)) {
     return res.status(406).json({ error: "invalid id" });
@@ -148,6 +158,7 @@ const addAComment = async (req, res) => {
       commentorName: req.user.username,
       commentorPicture: req.user.userpicture,
       commentTime: new Date(),
+      commentorId: userId,
     };
     const post = await PostModel.findOneAndUpdate(
       { _id: postId },

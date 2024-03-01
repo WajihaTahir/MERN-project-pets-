@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { User } from "../../@types/users";
 import baseUrl from "../../utils/baseurl";
-import "./Userprofilepage.css";
+import "./Getuserprofilepage.css";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthContext";
 import getToken from "../../utils/getToken";
@@ -20,7 +20,7 @@ function Userprofilepage() {
   const [userProfile, setUserProfile] = useState<User>({} as User);
 
   const handleUpdateClick = () => {
-    navigate("/updateprofile"); // Navigate to the signup page
+    navigate("/updateprofile");
   };
 
   const getProfile = async () => {
@@ -42,9 +42,10 @@ function Userprofilepage() {
           `${baseUrl}/api/users/profile`,
           requestOptions
         );
+        console.log("response of user", response);
         if (response.ok) {
           const result = (await response.json()) as APIResponse<User>;
-          console.log("result of user", result);
+          // console.log("result of user", result);
           setUserProfile({ ...userProfile, ...result.data.user });
         }
       } catch (error) {

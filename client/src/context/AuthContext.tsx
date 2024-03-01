@@ -8,13 +8,14 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  signup: (email: string, password: string, username: string) => Promise<void>;
   updateUser: (values: {
+    //to be used in updateProfile page
     email: string;
     username: string | undefined;
     userpicture: string | undefined;
   }) => Promise<void>;
   loading: boolean;
+  setUser: (user: User) => void;
 }
 
 const defaultValue: AuthContextType = {
@@ -25,12 +26,11 @@ const defaultValue: AuthContextType = {
   logout: () => {
     throw new Error("no provider");
   },
-  signup: () => {
-    throw new Error("no provider");
-  },
   updateUser: () => {
     throw new Error("no provider");
   },
+  setUser: () => {},
+
   loading: false,
 };
 
@@ -39,37 +39,6 @@ export const AuthContext = createContext(defaultValue);
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading] = useState(false);
-
-  const signup = async (email: string, password: string, username: string) => {
-    if (!email || !password || !username)
-      return alert("All fields must be included.");
-
-    const headers = new Headers();
-    headers.append("Content-Type", "application/x-www-form-urlencoded");
-    const body = new URLSearchParams();
-    body.append("email", email);
-    body.append("password", password);
-    const requestOptions = {
-      method: "POST", //have to include the method if other than get
-      headers,
-      body,
-    };
-    try {
-      const response = await fetch(
-        `${baseUrl}/api/users/signup`,
-        requestOptions
-      ); //adding as a second parameter to the fetch.
-      if (response.ok) {
-        const result = (await response.json()) as User;
-        setUser(result);
-      } else {
-        const result = (await response.json()) as ResNotOk;
-        console.log(result);
-      }
-    } catch (error) {
-      console.log("errorrr signing up at auth context", error);
-    }
-  };
 
   const login = async (email: string, password: string) => {
     if (!email || !password) {
@@ -127,7 +96,9 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   }) => {
     //validation - check email format
     if (!user) return;
+    const token = getToken();
     const headers = new Headers();
+    headers.append("Authorization", `Bearer ${token}`);
     headers.append("Content-Type", "application/json");
     const body = JSON.stringify(values);
     const requestOptions = {
@@ -144,6 +115,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       );
       if (response.ok) {
         const result = (await response.json()) as User;
+        console.log("result((((", result);
         setUser(result);
       } else {
         const result = (await response.json()) as ResNotOk;
@@ -197,8 +169,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         user,
         login,
         logout,
-        signup,
         updateUser,
+        setUser,
         loading,
       }}
     >

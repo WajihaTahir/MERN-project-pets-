@@ -9,7 +9,7 @@ type LoginCredentials = {
 };
 
 const Login = () => {
-  const { user, login } = useContext(AuthContext);
+  const { user, login } = useContext(AuthContext); //imported login function from authContext
   const navigate = useNavigate(); // Use useNavigate hook to get navigation function
 
   const [loginCredentials, setLoginCredentials] = useState<LoginCredentials>({
@@ -62,7 +62,7 @@ const Login = () => {
           <input type="submit" value="Login" />
         </form>
         <div className="sign-up-link">
-          <p>
+          <p style={{ marginTop: "70px" }}>
             Don't have an account?{" "}
             <span
               onClick={handleSignUpClick}

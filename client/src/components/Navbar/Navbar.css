@@ -93,6 +93,14 @@ a {
 .six:hover {
   border-left: 50px solid rgb(139, 69, 224);
 }
+
+.seven {
+  border-left: 0px solid #ade70f;
+}
+
+.seven:hover {
+  border-left: 50px solid rgb(212, 255, 0);
+}
 button {
   background-color: none;
 }

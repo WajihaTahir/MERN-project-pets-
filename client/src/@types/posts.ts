@@ -1,9 +1,7 @@
 import { User } from "./users";
 
 export interface Comment {
-  commentorId: string;
-  commentorName: string;
-  commentorPicture: string;
+  commentor: User | null;
   comment: string;
   time: Date;
   _id: string;

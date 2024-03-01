@@ -5,7 +5,6 @@ import { v2 as cloudinary } from "cloudinary";
 import { encryptPassword, verifyPassword } from "../utils/encryptPassword.js";
 import validator from "validator";
 import { generateToken } from "../utils/tokenServices.js";
-import PetModel from "../models/petModel.js";
 
 const test = (req, res) => {
   res.send("testing successful");
@@ -15,9 +14,7 @@ const test = (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await UserModel.find({})
-      .select("-password")
-      .populate({ path: "ownedPet", select: ["name", "type"] }); //find everything
+    const allUsers = await UserModel.find({}).select("-password");
     res.status(200).json(allUsers);
   } catch (e) {
     console.log("error", e);

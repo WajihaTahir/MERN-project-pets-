@@ -11,7 +11,6 @@ import Spinner from "../../components/Spinner/Spinner.tsx";
 const ProfileUpdate = () => {
   const navigate = useNavigate();
   const { user, updateUser } = useContext(AuthContext);
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [userCredentials, setUserCredentials] = useState({

@@ -1,18 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
-import Layout from "./components/Layout.tsx";
+import Layout from "./components/Layout/Layout.tsx";
 import Error404 from "./pages/Error404.tsx";
 import Homepage from "./pages/Homepage/Homepage.tsx";
 import { AuthContextProvider } from "./context/AuthContext.tsx";
-import Profile from "./pages/Userprofile/Profile.tsx";
+import Profile from "./pages/Userprofile/Updateprofile.tsx";
 import Signup from "./pages/Signup/Signup.tsx";
 import Login from "./pages/Login/Login.tsx";
 import Allposts from "./pages/Allposts/Allposts.tsx";
-import Footer from "./components/Footer/Footer.tsx";
-import Userprofilepage from "./pages/Userprofile/Userprofilepage.tsx";
+import Userprofilepage from "./pages/Userprofile/Getuserprofilepage.tsx";
 import CreateNewPost from "./pages/CreateNewPost/CreateNewPost.tsx";
-import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -29,28 +28,43 @@ const router = createBrowserRouter([
         path: "/",
         element: <Homepage />,
       },
-      // {
-      //   path: "/users",
-      //   element: <Users />,
-      // },
       {
         path: "/login",
         element: <Login />,
       },
       {
         path: "/updateprofile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/updatepost",
+        element: (
+          <ProtectedRoute>
+            <CreateNewPost />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/createnewpost",
-        element: <CreateNewPost />,
+        element: (
+          <ProtectedRoute>
+            <CreateNewPost />
+          </ProtectedRoute>
+        ),
       },
 
       {
         path: "/userprofile",
-        element: <Userprofilepage />,
+        element: (
+          <ProtectedRoute>
+            <Userprofilepage />,
+          </ProtectedRoute>
+        ),
       },
-
       {
         path: "/signup",
         element: <Signup />,
@@ -58,12 +72,11 @@ const router = createBrowserRouter([
 
       {
         path: "/posts",
-        // element: (
-        //   <ProtectedRoute>
-        //     <Allposts />
-        //   </ProtectedRoute>
-        // ),
-        element: <Allposts />,
+        element: (
+          <ProtectedRoute>
+            <Allposts />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

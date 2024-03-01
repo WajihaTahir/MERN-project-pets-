@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     username: { type: String, required: true },
     userpicture: { type: String, required: false },
-    ownedPet: [{ type: mongoose.Schema.Types.ObjectId, ref: "pet" }],
   },
   { timestamps: true }
 ); //store the timestamps of when the document was created and last updated.

@@ -1,18 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const commentSchema = new Schema({
-  commentorId: {
-    type: String,
-    required: true,
-  },
-  commentorName: {
-    type: String,
-    required: true,
-  },
-  commentorPicture: {
-    type: String,
-    required: true,
-  },
+  commentor: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   comment: {
     type: String,
     required: true,
