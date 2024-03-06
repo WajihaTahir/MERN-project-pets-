@@ -5,6 +5,7 @@ import {
   deleteAComment,
   deletePost,
   getAllPosts,
+  getAllPostsByUser,
   getPostbyId,
   likeAPost,
   unlikeAPost,
@@ -16,11 +17,13 @@ import multerUpload from "../middlewares/multer.js";
 const postRouter = express.Router();
 
 postRouter.get("/allposts", getAllPosts);
+postRouter.get("/userposts/:userId", getAllPostsByUser);
 postRouter.post("/addacomment/:id", jwtAuth, addAComment);
 postRouter.delete("/deleteacomment/", jwtAuth, deleteAComment);
 postRouter.post("/likepost/:id", jwtAuth, likeAPost);
 postRouter.patch("/unlikepost/:id", jwtAuth, unlikeAPost);
 postRouter.get("/post/:_id", getPostbyId);
+
 postRouter.delete("/deletePost/:id", jwtAuth, deletePost);
 postRouter.post(
   "/postnewpost",

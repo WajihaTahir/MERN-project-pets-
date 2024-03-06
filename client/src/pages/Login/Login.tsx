@@ -40,7 +40,7 @@ const Login = () => {
     <>
       <div className="login-container">
         <div className="login-heading">
-          <h2>Login</h2>
+          <h2 style={{ fontWeight: "normal" }}>Login</h2>
         </div>
         <form className="login-form" action="#" onSubmit={handleSubmitLogin}>
           <input
@@ -68,7 +68,7 @@ const Login = () => {
               onClick={handleSignUpClick}
               style={{ cursor: "pointer", color: "blue" }}
             >
-              Sign up
+              Sign up here
             </span>
           </p>
         </div>

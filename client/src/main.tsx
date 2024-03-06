@@ -9,17 +9,18 @@ import Profile from "./pages/Userprofile/Updateprofile.tsx";
 import Signup from "./pages/Signup/Signup.tsx";
 import Login from "./pages/Login/Login.tsx";
 import Allposts from "./pages/Allposts/Allposts.tsx";
+import UserPosts from "./pages/UserPosts/UserPosts.tsx";
 import Userprofilepage from "./pages/Userprofile/Getuserprofilepage.tsx";
 import CreateNewPost from "./pages/CreateNewPost/CreateNewPost.tsx";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.tsx";
-
+import Footer from "./components/Footer/Footer.tsx";
 const router = createBrowserRouter([
   {
     element: (
       <AuthContextProvider>
         <Layout>
           <Outlet />
-          {/* <Footer /> */}
+          <Footer />
         </Layout>
       </AuthContextProvider>
     ),
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
         path: "/userprofile",
         element: (
           <ProtectedRoute>
-            <Userprofilepage />,
+            <Userprofilepage />
           </ProtectedRoute>
         ),
       },
@@ -75,6 +76,15 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Allposts />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/userposts",
+        element: (
+          <ProtectedRoute>
+            <UserPosts />
           </ProtectedRoute>
         ),
       },

@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  deleteUser,
   findUserByEmail,
   getAllUsers,
   getProfile,
@@ -40,5 +41,7 @@ userRouter.post(
   multerUpload.single("userpicture"),
   uploadPicture
 );
+
+userRouter.delete("/user/:id", jwtAuth, deleteUser);
 
 export default userRouter;

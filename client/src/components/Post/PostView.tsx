@@ -14,21 +14,30 @@ import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 import getToken from "../../utils/getToken.ts";
 import { likePost, unlikePost } from "../../utils/likes.ts";
+import { User } from "../../@types/users.ts";
 
 type Props = {
   post: Post;
   onDelete: (post: Post) => void;
 };
-
 function PostView({ post, onDelete }: Props) {
   const { user } = useContext(AuthContext);
   const [isCommenting, setIsCommenting] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [showAllComments, setShowAllComments] = useState(false);
-  const [, setUpdatedComments] = useState();
+  const [updatedComments, setUpdatedComments] = useState();
   const [likes, setLikes] = useState<string[]>([]);
   const navigate = useNavigate();
+
+  const handleUsernameClick = async (user: User) => {
+    navigate("/userposts", {
+      state: {
+        user: user, //will carry the state information of the user
+      },
+    });
+  };
+
   const handleUpdateClick = () => {
     navigate("/updatepost", {
       state: {
@@ -40,17 +49,19 @@ function PostView({ post, onDelete }: Props) {
     });
   };
   const alreadyLiked = useMemo(
+    //to optimize re-render or when the values in the dependency array change
+    //keeping a memoization of the users liked posts
     () => likes.includes(user?._id ?? ""),
-    [likes, user]
+    [likes, user] //will be run if any of these state changes. for example it will keep the value of likes even if user or likes change.
   );
-
   //like button
   const handleLikeButton = async (post: Post) => {
     if (!alreadyLiked) {
       try {
         await likePost({ post });
         if (user?._id) {
-          setLikes([...likes, user?._id]);
+          //if the user id exists
+          setLikes([...likes, user?._id]); //add the user to already likes
         }
       } catch (error) {
         alert("problem liking a post");
@@ -59,14 +70,13 @@ function PostView({ post, onDelete }: Props) {
       try {
         await unlikePost({ post });
         if (user?._id) {
-          setLikes(likes.filter((item) => item !== user._id));
+          setLikes(likes.filter((item) => item !== user._id)); //filter out and display only the left ones
         }
       } catch (error) {
         alert("problem unliking a post");
       }
     }
   };
-
   //for instant change on comments
   useEffect(() => {
     if (post.comments) {
@@ -74,11 +84,10 @@ function PostView({ post, onDelete }: Props) {
       setComments([...post.comments]);
     }
   }, [post.comments]);
-
   //for instant change on likes without refreshing the page
   useEffect(() => {
     if (post.likes) {
-      setLikes([...post.likes]);
+      setLikes([...post.likes]); //adding to the original likes and changing without refresh
     }
   }, [post.likes]);
 
@@ -115,6 +124,7 @@ function PostView({ post, onDelete }: Props) {
         .then((result) => {
           // console.log("result :>> ", result);
           setUpdatedComments(result.post.comments);
+          console.log("deleted comments", setUpdatedComments);
           setComments(comments.filter((item) => item._id !== commentId));
         })
         .catch((error) => console.log("error", error));
@@ -125,7 +135,7 @@ function PostView({ post, onDelete }: Props) {
     }
   };
 
-  //addding a comment
+  //adding a comment
   const onSubmit = async () => {
     const token = getToken();
     console.log("token", token);
@@ -160,23 +170,23 @@ function PostView({ post, onDelete }: Props) {
       alert("Couldn't create comment");
     }
   };
-
   //show more comments
-
   const handleShowMoreComments = () => {
     setShowAllComments(true);
   };
-
   return (
     <>
-      <div key={post._id} className="flexingpost">
+      <div key={post._id}>
         <div className="wholepost">
           <div className="usernamepicture">
             <img
               className="userpicturepost"
               src={post.ownedbyuser?.userpicture}
             ></img>
-            <p style={{ marginRight: "10px", marginTop: "40px" }}>
+            <p
+              className="username"
+              onClick={() => handleUsernameClick(post.ownedbyuser as User)}
+            >
               {post.ownedbyuser?.username},
             </p>
 
@@ -200,7 +210,7 @@ function PostView({ post, onDelete }: Props) {
             )}
           </div>
           <div className="caption">
-            <p style={{ marginBottom: "10px" }}>{post.caption}</p>
+            <p>{post.caption}</p>
           </div>
           <img className="postimage" src={post.image} alt="Post" />
 
@@ -211,7 +221,6 @@ function PostView({ post, onDelete }: Props) {
                   onClick={() => {
                     handleLikeButton(post);
                   }}
-                  color={alreadyLiked ? "blue" : "black"}
                   className="thumbsupicon"
                   icon={alreadyLiked ? faSolid : faThumbsUp}
                 />
@@ -224,9 +233,8 @@ function PostView({ post, onDelete }: Props) {
             >
               Comment
             </p>
-            <p>({comments.length} comments)</p>
+            <p>{comments.length} comment(s)</p>
           </div>
-
           {comments && comments.length > 0 && (
             <div>
               {showAllComments
@@ -280,7 +288,6 @@ function PostView({ post, onDelete }: Props) {
                       )}
                     </div>
                   ))}
-
               {!showAllComments && comments.length > 2 && (
                 <button
                   className="showmorecomments"
@@ -292,13 +299,7 @@ function PostView({ post, onDelete }: Props) {
             </div>
           )}
           {isCommenting && (
-            <div
-              style={{
-                width: "700px",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
+            <div className="isCommenting">
               <input
                 value={newComment}
                 onChange={(e) => {

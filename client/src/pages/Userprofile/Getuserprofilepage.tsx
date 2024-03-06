@@ -15,9 +15,15 @@ type APIResponse<T> = {
 };
 
 function Userprofilepage() {
-  const { user } = useContext(AuthContext);
+  const { user, deleteUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<User>({} as User);
+
+  const handleDeleteAccount = (user?: User) => {
+    if (user) {
+      if (window.confirm("Are you sure you want to get out?")) deleteUser(user);
+    }
+  };
 
   const handleUpdateClick = () => {
     navigate("/updateprofile");
@@ -67,7 +73,7 @@ function Userprofilepage() {
         <div className="userprofile-container ">
           {userProfile && (
             <div>
-              <h5 className="username">
+              <h5 className="username1">
                 <b>Username:</b> {userProfile.username}
               </h5>
               <h5 className="useremail">
@@ -85,6 +91,14 @@ function Userprofilepage() {
           )}
           <button className="updateuserprofile" onClick={handleUpdateClick}>
             Update Your profile
+          </button>
+          <button
+            className="deleteuserprofile"
+            onClick={() => {
+              handleDeleteAccount(user ?? undefined);
+            }}
+          >
+            Delete Your profile
           </button>
         </div>
       )}

@@ -14,8 +14,8 @@ a {
 .menu {
   position: fixed;
   height: 100%;
-  width: 120px;
-  background: rgb(2, 42, 46);
+  width: 110px;
+  background: rgb(21, 2, 114);
   opacity: 0.7;
   transition: width 1s;
   overflow: hidden;
@@ -28,7 +28,7 @@ a {
 }
 
 .menuitem {
-  height: 20%;
+  height: 17%;
   line-height: 30px;
   position: relative;
   padding: 10px;
@@ -65,6 +65,8 @@ a {
 
 .threehalf {
   border-left: 0px solid #08f400;
+  font-size: 30px;
+  margin-left: 15px;
 }
 
 .threehalf:hover {
@@ -88,6 +90,8 @@ a {
 
 .six {
   border-left: 0px solid #ade70f;
+  font-size: 30px;
+  margin-left: 15px;
 }
 
 .six:hover {
@@ -103,4 +107,8 @@ a {
 }
 button {
   background-color: none;
+}
+
+.menuitem .active {
+  color: red;
 }

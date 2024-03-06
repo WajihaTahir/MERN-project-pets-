@@ -1,11 +1,20 @@
-import { Post } from "../../@types/posts";
-import baseUrl from "../../utils/baseurl";
-import getToken from "../../utils/getToken";
+import { Post } from "../@types/posts";
+import baseUrl from "../utils/baseurl";
+import getToken from "../utils/getToken";
 
 const deletePost = (post: Post): Promise<unknown> => {
+  //if we use async, it would be like working with promises under the hood.
   //deleting a post
   return new Promise((resolve, reject) => {
     try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this cute post :( ?"
+      );
+      if (!confirmDelete) {
+        reject("User cancelled Deletion :D");
+        return;
+      }
+
       const token = getToken();
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${token}`);

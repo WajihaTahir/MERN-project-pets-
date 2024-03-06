@@ -3,6 +3,7 @@ import { User, LoginResponse } from "../@types/users";
 import baseUrl from "../utils/baseurl";
 import { ResNotOk } from "../@types";
 import getToken from "../utils/getToken";
+import { useNavigate } from "react-router";
 
 interface AuthContextType {
   user: User | null;
@@ -16,6 +17,7 @@ interface AuthContextType {
   }) => Promise<void>;
   loading: boolean;
   setUser: (user: User) => void;
+  deleteUser: (user: User) => Promise<void>;
 }
 
 const defaultValue: AuthContextType = {
@@ -32,6 +34,9 @@ const defaultValue: AuthContextType = {
   setUser: () => {},
 
   loading: false,
+  deleteUser: () => {
+    throw new Error("no provider");
+  },
 };
 
 export const AuthContext = createContext(defaultValue);
@@ -39,6 +44,7 @@ export const AuthContext = createContext(defaultValue);
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading] = useState(false);
+  const navigate = useNavigate();
 
   const login = async (email: string, password: string) => {
     if (!email || !password) {
@@ -70,7 +76,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
         if (!response.ok) {
           console.log("response not okay for login");
-          alert("invalid user email or password");
+          alert("invalid user email or password :( , Try again ?");
         }
 
         if (response.ok) {
@@ -126,6 +132,27 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const deleteUser = async (user: User) => {
+    const token = getToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+    };
+
+    await fetch(`${baseUrl}/api/users/user/${user._id}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        logout();
+        navigate("/");
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const checkUserStatus = async () => {
     const token = getToken();
     const myHeaders = new Headers();
@@ -171,6 +198,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         logout,
         updateUser,
         setUser,
+        deleteUser,
         loading,
       }}
     >

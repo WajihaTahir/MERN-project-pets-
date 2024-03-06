@@ -1,10 +1,11 @@
 .signup-container {
   width: 420px;
   background-color: #fff;
-  padding: 40px;
-  margin: 100px auto;
+  padding: 20px;
+  margin: 30px auto;
   border-radius: 8px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+  margin-bottom: 200px;
 }
 
 .signup-heading {
@@ -15,6 +16,7 @@
 .signup-heading h2 {
   font-size: 24px;
   color: #333;
+  font-weight: normal;
 }
 
 .signup-form {
@@ -49,17 +51,19 @@
 }
 
 .uploadpicture {
-  width: 50%;
+  width: 40%;
   background-color: #8d146f;
   color: white;
-  padding: 5px 10px;
+  padding: 6px 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   margin-bottom: 10px;
 }
-
+.uploadpicture:hover {
+  background-color: rgb(43, 153, 153);
+}
 .login-link {
   text-align: center;
 }
@@ -71,8 +75,4 @@
 .login-link span {
   color: #666;
   cursor: pointer;
-}
-
-.login-link span:hover {
-  text-decoration: underline;
 }

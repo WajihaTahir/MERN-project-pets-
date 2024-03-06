@@ -1,3 +1,5 @@
+//FOR CREATING A NEW POST OR UPDATING AN EXISTING POST//
+
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import baseUrl from "../../utils/baseurl.ts";
 import "./CreateNewPost.css";
@@ -12,7 +14,8 @@ const CreateNewPost = () => {
   const [imageToShow, setImageToShow] = useState<File | string>("");
   const [caption, setCaption] = useState<string>("");
   const { user } = useContext(AuthContext);
-  const { state } = useLocation();
+  const { state } = useLocation(); //to get any state data passed along with the route navigation.
+  //In this case, it is useful for passing the image and caption
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -36,12 +39,14 @@ const CreateNewPost = () => {
     if (state?.caption) {
       setCaption(state?.caption);
     }
-  }, [state]);
+  }, [state]); //checking if the state.image or caption exists and sets them to state variables respectively
 
+  //let's create or update a post based on the editing truthy or falsy
+  //editing was defined in postview page.
   const onSubmit = async () => {
     setLoading(true);
 
-    const callUrl = state?.editing
+    const callUrl = state?.editing // if editing is true, it sets as update post otherwise create a new post
       ? `api/posts/updatePost/${state?.id}/`
       : "api/posts/postnewpost/";
 
@@ -103,8 +108,8 @@ const CreateNewPost = () => {
                 {imageToShow && (
                   <img
                     src={imageToShow as string}
-                    width="400px"
-                    height="350px"
+                    width="300px"
+                    height="250px"
                   />
                 )}
                 <input type="file" onChange={handleFileSelect} />

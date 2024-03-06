@@ -8,15 +8,14 @@
 
 .footer {
   font-family: "Roboto", sans-serif;
-
   display: flex;
-  flex-flow: row wrap;
   padding: 4px;
   color: #2f2f2f;
   background-color: #fff;
   border-top: 1px solid #e5e5e5;
   position: fixed;
   width: 100%;
+  margin-top: 200px;
   bottom: 0;
 }
 
@@ -62,7 +61,7 @@
   border-radius: 100px;
   color: #2f2f2f;
   line-height: 0;
-  margin-left: 175px;
+  margin-left: 200px;
   margin-top: 20px;
   font-size: 1rem;
   padding: 0 1.3em;

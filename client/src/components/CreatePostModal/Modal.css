@@ -1,57 +1,75 @@
-.modal {
-  display: none;
+.modal-container {
   position: fixed;
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  width: 100vw;
+  height: 1000vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  margin-top: 0;
+  margin-left: 0;
+  justify-content: center;
+  align-items: center;
 }
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+.modal {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: whitesmoke;
+  width: 900px;
+  height: 500px;
+  z-index: 10000;
+  border: solid black;
+  border-radius: 10px;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+}
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
+.close-button {
+  cursor: pointer;
   color: black;
-  text-decoration: none;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: 10px;
+  font-size: 25px;
+  background-color: whitesmoke;
+  border-color: transparent;
+}
+.caption-input {
+  width: 700px;
+  height: 100px;
+  background-color: whitesmoke;
+  border-color: transparent;
+  font-size: 30px;
+}
+.imagebuttons {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+.modal-image {
+  margin-bottom: 30px;
+  width: 300px;
+  height: 200px;
+}
+.submit-camera-button {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.submit-button {
   cursor: pointer;
-}
-
-/* Optional: Styling for form elements */
-textarea {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  resize: none; /* Disable textarea resize */
-}
-
-input[type="file"] {
-  margin-bottom: 10px;
-}
-
-button[type="submit"] {
-  background-color: #4caf50;
+  background-color: black;
   color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-button[type="submit"]:hover {
-  background-color: #45a049;
+  padding: 10px 50px;
+  border-radius: 30px;
+  margin-right: 10px;
+  margin-left: 10px;
 }

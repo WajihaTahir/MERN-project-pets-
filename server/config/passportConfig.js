@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import UserModel from "../models/userModel.js";
-
+//passport is a popular authentication middleware
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.TOK_PASSWORD,
@@ -10,7 +10,7 @@ const jwtStrategy = new JwtStrategy(options, async function (
   done
 ) {
   try {
-    const user = await UserModel.findOne({ _id: jwt_payload.sub });
+    const user = await UserModel.findOne({ _id: jwt_payload.sub }); //to retrieve the corresponding user from the database.
     if (!user) {
       return done(null, false);
     }

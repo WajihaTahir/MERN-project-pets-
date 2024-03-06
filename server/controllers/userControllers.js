@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { encryptPassword, verifyPassword } from "../utils/encryptPassword.js";
 import validator from "validator";
 import { generateToken } from "../utils/tokenServices.js";
+import PostModel from "../models/postModel.js";
 
 const test = (req, res) => {
   res.send("testing successful");
@@ -211,12 +212,6 @@ const updateUser = async (req, res) => {
   }
 };
 
-//REVIEW logic to update profile
-//? 1st : check which properties to update are coming in the request
-//? 2nd: IF there is an image coming, we need to upload it to cloudnary
-//? 4th: NICE TO HAVE : what are we gonna do with the previous profile image???
-//? 5th: once Image is uploaded and we have the url from cloudinary, do request to mongoDB to update user profile (findByIdAndUpdate)
-
 //upload the picture for the user profile
 
 const uploadPicture = async (req, res) => {
@@ -276,6 +271,22 @@ const getProfile = async (req, res) => {
     });
   }
 };
+const deleteUser = async (req, res) => {
+  const id = req.params.id;
+  console.log("idin delete user", id);
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(406).json({ error: "Invalid ID" });
+  }
+  try {
+    const user = await UserModel.findOneAndDelete({ _id: id });
+    if (!user) {
+      return res.status(404).json({ error: "No user with ID " + id });
+    }
+    return res.status(200).json({ msg: "User deleted" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
 
 export {
   test,
@@ -286,4 +297,5 @@ export {
   updateUser,
   uploadPicture,
   getProfile,
+  deleteUser,
 };

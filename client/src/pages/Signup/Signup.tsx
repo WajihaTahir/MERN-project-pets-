@@ -14,8 +14,7 @@ type RegisterResponse = {
   };
 };
 const Signup = () => {
-  const navigate = useNavigate(); //created signup function here
-
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState<File | string>("");
   const [userCredentials, setUserCredentials] = useState<User | null>(null);
   const [profilePicture, setProfilePicture] = useState<string>("");
@@ -39,6 +38,7 @@ const Signup = () => {
   };
 
   const handleSubmitImage = async () => {
+    //picture upload
     const formdata = new FormData();
     formdata.append("userpicture", selectedFile);
 
@@ -55,11 +55,12 @@ const Signup = () => {
       console.log("response of an image fetch", response);
       if (response.ok) {
         const result = (await response.json()) as UploadFileResponse;
-        console.log("Image result", result.data.imageUrl);
+        // console.log("Image result", result.data.imageUrl);
         setUserCredentials({
           ...(userCredentials as User),
           userpicture: result.data.imageUrl,
         });
+        // console.log("result of signup", result);
         setProfilePicture(result.data.imageUrl);
       }
       if (!response.ok) {
@@ -172,14 +173,17 @@ const Signup = () => {
           </div>
           <input onClick={handleSubmitSignup} type="submit" value="Sign Up" />
         </div>
-        <div className="login-link">
+        <div style={{ marginBottom: "40px" }}>
           <p>
             Already have an account?{" "}
             <span
               onClick={handleLoginClick}
-              style={{ cursor: "pointer", color: "blue" }}
+              style={{
+                cursor: "pointer",
+                color: "blue",
+              }}
             >
-              Login
+              Login here
             </span>
           </p>
         </div>

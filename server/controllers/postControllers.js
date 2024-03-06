@@ -7,12 +7,12 @@ import mongoose from "mongoose";
 
 const getAllPosts = async (req, res) => {
   try {
-    const allPosts = await PostModel.find({})
-      .populate("ownedbyuser")
+    const allPosts = await PostModel.find({}) //finding all documents in a collection.
+      .populate("ownedbyuser") //ownedbyuser is populated by data from user model as a ref.
       .populate({
         path: "comments",
         populate: {
-          path: "commentor",
+          path: "commentor", //each field within the commentor is populated using the data from user model.
           model: "user",
         },
       });
@@ -29,6 +29,37 @@ const getAllPosts = async (req, res) => {
   }
 };
 
+//GET ALL POSTS OF ONE USER
+const getAllPostsByUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userPosts = await PostModel.find({ ownedbyuser: userId })
+      .populate("ownedbyuser")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "commentor",
+          model: "user",
+        },
+      });
+
+    if (userPosts.length === 0) {
+      return res.status(404).json({ message: "No posts found for the user." });
+    }
+
+    res.status(200).json({
+      number: userPosts.length,
+      userPosts,
+    });
+  } catch (error) {
+    console.error("Error fetching user posts:", error);
+    res.status(500).json({
+      error,
+      message: "Something went wrong while getting user posts.",
+    });
+  }
+};
+
 //TO GET ONE POST
 
 const getPostbyId = async (req, res) => {
@@ -38,7 +69,7 @@ const getPostbyId = async (req, res) => {
   // console.log("postIDId", postID);
 
   try {
-    const requestedId = await PostModel.find({ _id: req.params._id }).exec();
+    const requestedId = await PostModel.find({ _id: req.params._id });
     res.status(201).json({
       number: requestedId.length,
       requestedId,
@@ -51,7 +82,6 @@ const getPostbyId = async (req, res) => {
 };
 
 //TO CREATE A NEW POST
-
 const createAPost = async (req, res) => {
   console.log("createAPost...", req.file);
   try {
@@ -66,7 +96,7 @@ const createAPost = async (req, res) => {
       comments: [],
       like: [],
       time: new Date(),
-      ownedbyuser: req.user._id,
+      ownedbyuser: req.user._id, //giving the user id to the property ownedbyuser here
     });
     if (!post) {
       res.status(500).json({ error: "post couldnot be submitted" });
@@ -122,6 +152,15 @@ const updatePost = async (req, res) => {
   }
 };
 
+const deleteImage = async (req, res) => {
+  try {
+    const deleteResult = await cloudinary.uploader.destroy(req.body.public_id);
+    return res.status(200).json(deleteResult);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 //TO DELETE A POST
 
 const deletePost = async (req, res) => {
@@ -154,7 +193,7 @@ const addAComment = async (req, res) => {
   try {
     const submitComment = {
       comment: req.body.comment,
-      commentor: req.user._id,
+      commentor: req.user._id, //containers the id of the user commenting
       commentorName: req.user.username,
       commentorPicture: req.user.userpicture,
       commentTime: new Date(),
@@ -170,7 +209,8 @@ const addAComment = async (req, res) => {
     if (!post) {
       return res.status(500).json({ error: "id not found" });
     }
-    const newCommentId = post.comments[post.comments.length - 1]._id;
+    const newCommentId = post.comments[post.comments.length - 1]._id; //gives the index of the newly added comment in the array.
+
     return res.status(200).json({ post, newCommentId });
   } catch (error) {
     return res.status(500).json({ error: error });
@@ -233,7 +273,7 @@ const likeAPost = async (req, res) => {
       { new: true }
     );
     // console.log("here at like", updatedLikes);
-    return res.status(200).json({ message: "added to likes" });
+    return res.status(200).json({ message: "added to likes", updatedLikes });
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -276,6 +316,7 @@ const unlikeAPost = async (req, res) => {
 
 export {
   getAllPosts,
+  getAllPostsByUser,
   getPostbyId,
   createAPost,
   addAComment,

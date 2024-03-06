@@ -1,13 +1,15 @@
 import React, { useState, ChangeEvent, FormEvent, useRef } from "react";
-import getToken from "../../utils/getToken";
-import baseUrl from "../../utils/baseurl";
-import Spinner from "../Spinner/Spinner";
-import { FaCamera } from "react-icons/fa"; // Import the camera icon
+import getToken from "../../utils/getToken.ts";
+import baseUrl from "../../utils/baseurl.ts";
+import Spinner from "../Spinner/Spinner.tsx";
+import { FaCamera } from "react-icons/fa";
+import "./modal.css";
 
 interface CreatePostModalProps {
   onClose: () => void;
   isOpen: boolean;
-  onSuccess: () => void;
+  onSuccess: () => void; //a callback function,
+  //function taking no arguments and returning nothing.
 }
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({
@@ -18,7 +20,6 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState<File | string>("");
   const [imageToShow, setImageToShow] = useState<File | string>("");
-
   const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -26,11 +27,12 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
     const file = e.target.files?.[0];
     if (file) {
       setImage(file);
-      const reader = new FileReader();
+      const reader = new FileReader(); //is a javascript object which reads the contents of the file.
       reader.onloadend = () => {
-        setImageToShow(reader.result as string);
+        //happens when the image reading is done.
+        setImageToShow(reader.result as string); //storing the image as string.
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); //here it is converting into base64 encoded string which can be used in src of image.
     }
   };
   const openFileInput = () => {
@@ -55,7 +57,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
     };
     try {
       const response = await fetch(
-        `${baseUrl}/api/posts/postnewpost`,
+        `${baseUrl}/api/posts/postnewpost`, //create a new post function
         requestOptions
       );
       if (response.ok) {
@@ -65,7 +67,6 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         setImage("");
         setImageToShow("");
         setLoading(false);
-        console.log("post created");
       }
     } catch (error) {
       console.log("error creating post", error);
@@ -79,89 +80,22 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
   return (
     <>
-      <div
-        style={{
-          position: "fixed",
-          width: "100vw",
-          height: "100vh",
-          background: "rgba(0, 0, 0, 0.5)", // Semi-transparent black color
-          zIndex: 9999, // Ensure the backdrop is behind the modal
-          top: 0,
-          left: 0,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <div
-          className="modal"
-          style={{
-            position: "fixed",
-            top: "30%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "whitesmoke",
-            width: "900px",
-            height: "500px",
-            zIndex: 10000,
-            border: "solid black",
-            borderRadius: "10px",
-            padding: "20px",
-          }}
-        >
-          <div
-            className="modal-content"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <button
-              style={{
-                cursor: "pointer",
-                color: "black",
-                marginTop: "20px",
-                marginLeft: "auto",
-                marginRight: "10px",
-                fontSize: "25px",
-                backgroundColor: "whitesmoke",
-                borderColor: "transparent",
-              }}
-              className="close"
-              onClick={onClose}
-            >
+      <div className="modal-container">
+        <div className="modal">
+          <div className="modal-content">
+            <button className="close-button" onClick={onClose}>
               <span>&times;</span>
             </button>
             <input
-              style={{
-                width: "700px",
-                height: "100px",
-
-                backgroundColor: "whitesmoke",
-                borderColor: "transparent",
-                fontSize: "30px",
-              }}
+              className="caption-input"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Create fun post for your pet here..."
               required
             ></input>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                flexDirection: "column",
-                marginBottom: "30px",
-              }}
-            >
+            <div className="imagebuttons">
               {imageToShow && (
-                <img
-                  src={imageToShow as string}
-                  style={{ marginBottom: "30px" }}
-                  width="300px"
-                  height="200px"
-                />
+                <img className="modal-image" src={imageToShow as string} />
               )}
               <form onSubmit={onSubmit}>
                 <input
@@ -173,15 +107,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
                   onChange={handleFileSelect}
                   required
                 />
-                <div
-                  style={{
-                    marginBottom: "30px",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                <div className="submit-camera-button">
                   <FaCamera
                     onClick={openFileInput} // Open file input when the camera icon is clicked
                     style={{
@@ -189,17 +115,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
                       fontSize: "25px",
                     }}
                   />
-
-                  <button
-                    type="submit"
-                    style={{
-                      cursor: "pointer",
-                      backgroundColor: "black",
-                      color: "white",
-                      padding: "10px 50px",
-                      borderRadius: "30px",
-                    }}
-                  >
+                  <button className="submit-button" type="submit">
                     Submit
                   </button>
                   {loading && <Spinner />}
