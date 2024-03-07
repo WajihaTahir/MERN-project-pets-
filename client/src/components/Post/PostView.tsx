@@ -26,7 +26,6 @@ function PostView({ post, onDelete }: Props) {
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [showAllComments, setShowAllComments] = useState(false);
-  const [updatedComments, setUpdatedComments] = useState();
   const [likes, setLikes] = useState<string[]>([]);
   const navigate = useNavigate();
 
@@ -81,7 +80,7 @@ function PostView({ post, onDelete }: Props) {
   useEffect(() => {
     if (post.comments) {
       console.log("postcomms", post.comments);
-      setComments([...post.comments]);
+      setComments([...post.comments]); //Adding comments to component state so we can add remove from it later
     }
   }, [post.comments]);
   //for instant change on likes without refreshing the page
@@ -90,6 +89,10 @@ function PostView({ post, onDelete }: Props) {
       setLikes([...post.likes]); //adding to the original likes and changing without refresh
     }
   }, [post.likes]);
+
+  useEffect(() => {
+    console.log("comments...", comments);
+  }, [comments]);
 
   //delete a comment
   const handleDeleteComment = async (postId: string, commentId: string) => {
@@ -100,16 +103,11 @@ function PostView({ post, onDelete }: Props) {
       myHeaders.append("Authorization", `Bearer ${token}`);
       myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-      // console.log("comment._id :>> ", comment._id);
       const urlencoded = new URLSearchParams();
       urlencoded.append("commentId", commentId);
       urlencoded.append("postId", postId);
-      // const raw = JSON.stringify({
-      //   commentId: commentId,
-      // });
 
       if (!commentId) {
-        // console.log("comment._id is undefined");
         return;
       }
 
@@ -121,10 +119,9 @@ function PostView({ post, onDelete }: Props) {
 
       fetch(`${baseUrl}/api/posts/deleteacomment/`, requestOptions)
         .then((response) => response.json())
-        .then((result) => {
-          // console.log("result :>> ", result);
-          setUpdatedComments(result.post.comments);
-          console.log("deleted comments", setUpdatedComments);
+        .then(() => {
+          //deleting comment in component state temporarily
+          //so we don't have to fetch all posts again on delete
           setComments(comments.filter((item) => item._id !== commentId));
         })
         .catch((error) => console.log("error", error));
@@ -155,14 +152,15 @@ function PostView({ post, onDelete }: Props) {
         requestOptions
       );
       const resJson = await response.json();
+      //Creating comment object temporarily to add in component state
+      //on same structure as comes from server.
       const tempComment: Comment = {
+        //just given name so when it will refresh, the server one will come.
         comment: newComment,
         commentor: user,
         time: new Date(),
         _id: resJson.newCommentId,
       };
-      // console.log("comment id", tempComment.commentorId);
-      // console.log("user id", user?._id);
       setComments([...comments, tempComment]);
       setNewComment("");
     } catch (error) {

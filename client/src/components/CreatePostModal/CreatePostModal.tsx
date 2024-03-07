@@ -6,7 +6,7 @@ import { FaCamera } from "react-icons/fa";
 import "./modal.css";
 
 interface CreatePostModalProps {
-  onClose: () => void;
+  onClose: () => void; //callback function which takes nothing and returns nothing
   isOpen: boolean;
   onSuccess: () => void; //a callback function,
   //function taking no arguments and returning nothing.

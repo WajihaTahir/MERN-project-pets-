@@ -45,7 +45,7 @@ function PostList({ posts, fetchPosts, setPosts }: Props) {
           <CreatePostModal
             onClose={handleCloseModal}
             isOpen={showModal}
-            onSuccess={fetchPosts}
+            onSuccess={fetchPosts} //post modal creates post and then displays all posts again
           />
         </div>
         {posts.map((post) => {

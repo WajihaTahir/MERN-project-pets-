@@ -233,7 +233,9 @@ const uploadPicture = async (req, res) => {
         message: "file uploaded successfully",
         error: false,
         data: { imageUrl: pictureUpload.secure_url },
+        // public_id: pictureUpload.public_id,
       });
+      // console.log("publicccc iddd", public_id);
     } catch (error) {
       console.log("error on pictureUpload", error);
       res.status(500).json({
@@ -244,6 +246,15 @@ const uploadPicture = async (req, res) => {
     }
   }
 };
+
+// const deleteImage = async (req, res) => {
+//   try {
+//     const deleteResult = await cloudinary.uploader.destroy(req.body.public_id);
+//     return res.status(200).json(deleteResult);
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+// };
 
 const getProfile = async (req, res) => {
   console.log("profile from user");
