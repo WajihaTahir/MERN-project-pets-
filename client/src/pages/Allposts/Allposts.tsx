@@ -19,7 +19,7 @@ function Allposts() {
       .then((res) => {
         console.log("res :>> ", res);
         const foundPosts = res as APIResponse;
-        setAllPosts(foundPosts.allPosts);
+        setAllPosts(foundPosts.allPosts.reverse());
       })
       .catch((error) => console.log(error));
   };

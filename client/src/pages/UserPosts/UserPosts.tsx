@@ -20,7 +20,7 @@ function UserPosts() {
     try {
       const data = await getPostByUser(state.user);
       if (data) {
-        setAllPosts(data.userPosts);
+        setAllPosts(data.userPosts.reverse());
       }
     } catch (error) {
       console.log(error);
