@@ -32,7 +32,7 @@ userRouter.post("/login", login);
 userRouter.patch(
   "/updateprofile/:_id",
   jwtAuth,
-  multerUpload.single("userpicture"),
+  // multerUpload.single("userpicture"),
   updateUser
 );
 

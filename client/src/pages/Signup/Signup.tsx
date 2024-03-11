@@ -59,6 +59,7 @@ const Signup = () => {
         setUserCredentials({
           ...(userCredentials as User),
           userpicture: result.data.imageUrl,
+          public_id: result.data.public_id,
         });
         // console.log("result of signup", result);
         setProfilePicture(result.data.imageUrl);
@@ -89,6 +90,10 @@ const Signup = () => {
         userCredentials?.userpicture
           ? userCredentials.userpicture
           : "https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg"
+      );
+      urlencoded.append(
+        "public_id",
+        userCredentials?.public_id ? userCredentials.public_id : ""
       );
 
       const requestOptions = {

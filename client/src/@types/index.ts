@@ -1,12 +1,12 @@
 export declare type ResNotOk = {
-    error:string
-}
+  error: string;
+};
 
-export declare type UploadFileResponse =
-{
-    message: string;
-    error:boolean;
-    data:{
-        imageUrl:string
-    }
-} 
+export declare type UploadFileResponse = {
+  message: string;
+  error: boolean;
+  data: {
+    imageUrl: string;
+    public_id: string;
+  };
+};

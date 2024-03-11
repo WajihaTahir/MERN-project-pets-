@@ -4,6 +4,7 @@ export declare interface User {
   password: string;
   username: string;
   userpicture?: string;
+  public_id?: string;
   createdAt: string;
 }
 

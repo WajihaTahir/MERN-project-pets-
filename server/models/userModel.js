@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     username: { type: String, required: true },
     userpicture: { type: String, required: false },
+    public_id: { type: String, required: false },
   },
   { timestamps: true }
 ); //store the timestamps of when the document was created and last updated.

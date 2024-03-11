@@ -46,7 +46,7 @@ const findUserByEmail = async (req, res) => {
 const signup = async (req, res) => {
   console.log(req.body);
 
-  const { email, password, username, userpicture } = req.body;
+  const { email, password, username, userpicture, public_id } = req.body;
   if (!email || !password || !username)
     return res.status(400).json({ error: "All fields must be included" });
   if (!validator.isEmail(email)) {
@@ -85,6 +85,7 @@ const signup = async (req, res) => {
             password: hashedPassword,
             username: username,
             userpicture: userpicture,
+            public_id: public_id,
           });
           console.log("new user", newUser);
           if (newUser)
@@ -96,6 +97,7 @@ const signup = async (req, res) => {
                   username: newUser.username,
                   email: newUser.email,
                   userpicture: newUser.userpicture,
+                  public_id: newUser.public_id,
                 },
               },
             });
@@ -176,8 +178,11 @@ const login = async (req, res) => {
 //update an existing user
 
 const updateUser = async (req, res) => {
-  const { username, email, userpicture } = req.body;
+  console.log("requser", req.user);
+  const { username, email, userpicture, public_id } = req.body;
+  console.log("reqbody", req.body);
   const id = req.body._id;
+  console.log("iddd", id);
   try {
     const updatedUserFields = {};
     if (username) {
@@ -196,6 +201,11 @@ const updateUser = async (req, res) => {
     }
     if (userpicture) {
       updatedUserFields.userpicture = userpicture;
+      if (req.user.public_id)
+        await cloudinary.uploader.destroy(req.user.public_id);
+    }
+    if (public_id) {
+      updatedUserFields.public_id = public_id;
     }
     const updatedUserData = await UserModel.findByIdAndUpdate(
       id,
@@ -208,7 +218,9 @@ const updateUser = async (req, res) => {
       .status(200)
       .json({ message: "update successful", user: updatedUserData });
   } catch (error) {
-    res.status.json({ message: "error updating the user info", error: error });
+    res
+      .status(400)
+      .json({ message: "error updating the user info", error: error });
   }
 };
 
@@ -232,8 +244,10 @@ const uploadPicture = async (req, res) => {
       res.status(201).json({
         message: "file uploaded successfully",
         error: false,
-        data: { imageUrl: pictureUpload.secure_url },
-        // public_id: pictureUpload.public_id,
+        data: {
+          imageUrl: pictureUpload.secure_url,
+          public_id: pictureUpload.public_id,
+        },
       });
       // console.log("publicccc iddd", public_id);
     } catch (error) {
@@ -257,8 +271,8 @@ const uploadPicture = async (req, res) => {
 // };
 
 const getProfile = async (req, res) => {
-  console.log("profile from user");
-  console.log("req get profile", req.user);
+  // console.log("profile from user");
+  // console.log("req get profile", req.user);
   const { user } = req;
   if (!user) {
     res.status(500).json({
@@ -293,6 +307,8 @@ const deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "No user with ID " + id });
     }
+    if (req.user.public_id)
+      await cloudinary.uploader.destroy(req.user.public_id);
     return res.status(200).json({ msg: "User deleted" });
   } catch (error) {
     return res.status(500).json({ error: error.message });

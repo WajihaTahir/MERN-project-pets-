@@ -17,6 +17,7 @@ const ProfileUpdate = () => {
     email: user?.email ?? "",
     username: user?.username ?? "",
     userpicture: user?.userpicture ?? "",
+    public_id: user?.public_id ?? "",
   });
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +44,7 @@ const ProfileUpdate = () => {
         setUserCredentials({
           ...userCredentials,
           userpicture: result.data.imageUrl,
+          public_id: result.data.public_id,
         });
       }
       setLoading(false);
