@@ -3,7 +3,7 @@ import getToken from "../../utils/getToken.ts";
 import baseUrl from "../../utils/baseurl.ts";
 import Spinner from "../Spinner/Spinner.tsx";
 import { FaCamera } from "react-icons/fa";
-import "./modal.css";
+import "./Modalstyle.css";
 
 interface CreatePostModalProps {
   onClose: () => void; //callback function which takes nothing and returns nothing
