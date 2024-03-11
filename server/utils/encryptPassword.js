@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 
 const encryptPassword = async (userPassword) => {
   try {
-    const saltRounds = 10;
+    const saltRounds = 10; //no of rounds used in the hashing process to generate salt.
     const salt = await bcrypt.genSalt(saltRounds);
 
     const hashedPassword = await bcrypt.hash(userPassword, salt);
@@ -28,4 +28,4 @@ const verifyPassword = async (myPlaintextPassword, hash) => {
   }
 };
 
-export { encryptPassword, verifyPassword };
+export { encryptPassword, verifyPassword }; //used in signup and login functions in usercontrollers.

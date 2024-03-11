@@ -21,8 +21,11 @@ const postSchema = new mongoose.Schema({
   time: { type: Date, required: false },
 });
 
-// Define a virtual property to get userName from associated user data
+// Define a virtual property to get userName from associated user data, just retrieve it not store it
 postSchema.virtual("userName", {
+  //This virtual property will automatically
+  //populate the associated user data when querying posts.
+  //is also useful to get up-to-date user data
   ref: "user",
   localField: "ownedbyuser",
   foreignField: "_id",

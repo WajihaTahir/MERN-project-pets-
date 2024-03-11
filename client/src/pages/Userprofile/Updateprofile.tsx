@@ -10,7 +10,7 @@ import Spinner from "../../components/Spinner/Spinner.tsx";
 
 const ProfileUpdate = () => {
   const navigate = useNavigate();
-  const { user, updateUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [userCredentials, setUserCredentials] = useState({
@@ -65,12 +65,13 @@ const ProfileUpdate = () => {
         {
           method: "PATCH",
           headers: myHeaders,
-          body: JSON.stringify({ _id: user?._id, ...userCredentials }),
+          body: JSON.stringify({ _id: user?._id, ...userCredentials }), //to merge id and
+          //userCredential into single object to be sent as request body
         }
       );
       if (response.ok) {
         const result = (await response.json()) as User;
-        updateUser(result); // Update user context with the updated user data
+        setUser(result); // Update user context with the updated user data
         navigate("/userprofile"); // Redirect to the profile page
       }
       setLoading(false);

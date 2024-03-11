@@ -152,14 +152,14 @@ const updatePost = async (req, res) => {
   }
 };
 
-const deleteImage = async (req, res) => {
-  try {
-    const deleteResult = await cloudinary.uploader.destroy(req.body.public_id);
-    return res.status(200).json(deleteResult);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-};
+// const deleteImage = async (req, res) => {
+//   try {
+//     const deleteResult = await cloudinary.uploader.destroy(req.body.public_id);
+//     return res.status(200).json(deleteResult);
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+// };
 
 //TO DELETE A POST
 
@@ -194,15 +194,15 @@ const addAComment = async (req, res) => {
     const submitComment = {
       comment: req.body.comment,
       commentor: req.user._id, //containers the id of the user commenting
-      commentorName: req.user.username,
-      commentorPicture: req.user.userpicture,
+      // commentorName: req.user.username,
+      // commentorPicture: req.user.userpicture,
       commentTime: new Date(),
-      commentorId: userId,
+      // commentorId: userId,
     };
     const post = await PostModel.findOneAndUpdate(
       { _id: postId },
       {
-        $push: { comments: submitComment },
+        $push: { comments: submitComment }, //pushing the new comment in the comments array of the post.
       },
       { new: true }
     );

@@ -1,12 +1,14 @@
+//FOR AUTHENTICATION
+
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import UserModel from "../models/userModel.js";
-//passport is a popular authentication middleware
+//passport is a popular authentication middleware which uses passport-jwt authetication
 const options = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), //to extract token from header
   secretOrKey: process.env.TOK_PASSWORD,
 };
 const jwtStrategy = new JwtStrategy(options, async function (
-  jwt_payload,
+  jwt_payload, //contains the information about the user
   done
 ) {
   try {

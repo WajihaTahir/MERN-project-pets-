@@ -55,7 +55,7 @@ const Signup = () => {
       console.log("response of an image fetch", response);
       if (response.ok) {
         const result = (await response.json()) as UploadFileResponse;
-        // console.log("Image result", result.data.imageUrl);
+        console.log("Image result", result.data.imageUrl);
         setUserCredentials({
           ...(userCredentials as User),
           userpicture: result.data.imageUrl,
@@ -73,9 +73,13 @@ const Signup = () => {
   };
 
   const handleSubmitSignup = async () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     if (userCredentials) {
+      const { password } = userCredentials;
+      if (password.length < 2 || password.length > 10) {
+        alert("check your password again");
+      }
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
       const urlencoded = new URLSearchParams();
       urlencoded.append("email", userCredentials?.email);
       urlencoded.append("password", userCredentials.password);

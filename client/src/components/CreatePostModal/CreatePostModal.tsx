@@ -24,7 +24,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]; // to safely access properties of an object
+    //that may be null or undefined
     if (file) {
       setImage(file);
       const reader = new FileReader(); //is a javascript object which reads the contents of the file.
@@ -32,7 +33,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         //happens when the image reading is done.
         setImageToShow(reader.result as string); //storing the image as string.
       };
-      reader.readAsDataURL(file); //here it is converting into base64 encoded string which can be used in src of image.
+      reader.readAsDataURL(file); //here it is converting into base64 encoded
+      //string which can be used in src of image.
     }
   };
   const openFileInput = () => {

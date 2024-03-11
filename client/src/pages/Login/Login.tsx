@@ -18,7 +18,6 @@ const Login = () => {
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log("e.target.value", e.target.name, e.target.value);
     setLoginCredentials({
       ...loginCredentials,
       [e.target.name]: e.target.value,

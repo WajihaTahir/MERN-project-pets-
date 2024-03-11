@@ -21,7 +21,8 @@ function Userprofilepage() {
 
   const handleDeleteAccount = (user?: User) => {
     if (user) {
-      if (window.confirm("Are you sure you want to get out?")) deleteUser(user);
+      if (window.confirm("Are you sure you want to delete Fur Pal Account?"))
+        deleteUser(user);
     }
   };
 

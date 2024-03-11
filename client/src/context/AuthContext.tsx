@@ -1,7 +1,6 @@
 import { useState, createContext, PropsWithChildren, useEffect } from "react";
 import { User, LoginResponse } from "../@types/users";
 import baseUrl from "../utils/baseurl";
-import { ResNotOk } from "../@types";
 import getToken from "../utils/getToken";
 import { useNavigate } from "react-router";
 
@@ -9,12 +8,6 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  updateUser: (values: {
-    //to be used in updateProfile page
-    email: string;
-    username: string | undefined;
-    userpicture: string | undefined;
-  }) => Promise<void>;
   loading: boolean;
   setUser: (user: User) => void;
   deleteUser: (user: User) => Promise<void>;
@@ -26,9 +19,6 @@ const defaultValue: AuthContextType = {
     throw new Error("no provider");
   },
   logout: () => {
-    throw new Error("no provider");
-  },
-  updateUser: () => {
     throw new Error("no provider");
   },
   setUser: () => {},
@@ -92,43 +82,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       } catch (error) {
         console.log("error loggin in user", error);
       }
-    }
-  };
-
-  const updateUser = async (values: {
-    email: string;
-    username: string | undefined;
-    userpicture: string | undefined;
-  }) => {
-    //validation - check email format
-    if (!user) return;
-    const token = getToken();
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${token}`);
-    headers.append("Content-Type", "application/json");
-    const body = JSON.stringify(values);
-    const requestOptions = {
-      method: "PATCH",
-      headers,
-      body,
-    };
-    console.log("reqopts", requestOptions);
-    try {
-      console.log("user._id", user);
-      const response = await fetch(
-        `${baseUrl}/api/users/updateprofile/${user._id}`,
-        requestOptions
-      );
-      if (response.ok) {
-        const result = (await response.json()) as User;
-        console.log("result((((", result);
-        setUser(result);
-      } else {
-        const result = (await response.json()) as ResNotOk;
-        console.log(result);
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -196,7 +149,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         user,
         login,
         logout,
-        updateUser,
         setUser,
         deleteUser,
         loading,

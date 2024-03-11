@@ -132,14 +132,13 @@ function PostView({ post, onDelete }: Props) {
     }
   };
 
-  //adding a comment
+  //this function is triggered when adding a new comment
   const onSubmit = async () => {
     const token = getToken();
     console.log("token", token);
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     const formdata = new URLSearchParams();
-
     formdata.append("comment", newComment);
     const requestOptions = {
       method: "POST",
