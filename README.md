@@ -1,4 +1,4 @@
-#Pet Social Media App#
+#Pet Social Media App
 
 (Create, Read, Update, Delete), creating a pet social media website where the signed up users can post pictures of their pets and like, comment posts of other users. They can also delete their own post or comments on their own posts. Moreover, a user can update his/her profile as well including the user picture, email and username. 
 
